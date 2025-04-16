@@ -1,7 +1,7 @@
-import React, { lazy, useEffect } from 'react'
+import React, { lazy, useEffect } from 'react';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { themeChange } from 'theme-change';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
-import { themeChange } from 'theme-change'
 import checkAuth from './app/auth';
 import initializeApp from './app/init';
 
@@ -33,6 +33,7 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/register" element={<Register />} />
@@ -41,8 +42,7 @@ function App() {
           {/* Place new routes over this */}
           <Route path="/app/*" element={<Layout />} />
 
-          <Route path="*" element={<Navigate to={token ? "/app/welcome" : "/login"} replace />}/>
-
+        
         </Routes>
       </Router>
     </>

@@ -1,8 +1,8 @@
-import routes from '../routes/sidebar'
-import { NavLink,  Routes, Link , useLocation} from 'react-router-dom'
-import SidebarSubmenu from './SidebarSubmenu';
-import XMarkIcon  from '@heroicons/react/24/outline/XMarkIcon'
+import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
 import { useDispatch } from 'react-redux';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import routes from '../routes/sidebar';
+import SidebarSubmenu from './SidebarSubmenu';
 
 function LeftSidebar(){
     const location = useLocation();
@@ -24,7 +24,7 @@ function LeftSidebar(){
 
                 <li className="mb-2 font-semibold text-xl">
                     
-                    <Link to={'/app/welcome'}><img className="mask mask-squircle w-10" src="/logo192.png" alt="DashWind Logo"/>DashWind</Link> </li>
+                    <Link to={'/app/dashboard'}><img className="mask mask-squircle w-10" src="/logo192.png" alt="DashWind Logo"/>DashWind</Link> </li>
                 {
                     routes.map((route, k) => {
                         return(
