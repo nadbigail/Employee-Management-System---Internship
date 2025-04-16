@@ -7,12 +7,27 @@ import { showNotification } from '../common/headerSlice'
 
 
 const statsData = [
-    {title : "Task", value : "34.7k", icon : <UserGroupIcon className='w-8 h-8'/>, description : "↗︎ 2300 (22%)"},
-    {title : "Projects", value : "$34,545", icon : <CreditCardIcon className='w-8 h-8'/>, description : "Current month"},
-    
-]
-
-
+  {
+    title: "Task",
+    pending: 0,
+    overdue: 0,
+    icon: (
+      <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h8m-8 6h16" />
+      </svg>
+    )
+  },
+  {
+    title: "Projects",
+    pending: 0,
+    overdue: 0,
+    icon: (
+      <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h18M3 12h18M3 17h18" />
+      </svg>
+    )
+  }
+];
 
 function Dashboard(){
 
@@ -52,15 +67,26 @@ function Dashboard(){
 
         
         {/** ---------------------- Different stats content 1 ------------------------- */}
-            <div className="grid lg:grid-cols-2 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
-                {
-                    statsData.map((d, k) => {
-                        return (
-                            <DashboardStats key={k} {...d} colorIndex={k}/>
-                        )
-                    })
-                }
-            </div>
+        <div className="grid lg:grid-cols-2 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
+  {statsData.map((d, k) => (
+    <div key={k} className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+      <div>
+        <div className="font-semibold text-gray-700 text-xl">{d.title}</div>
+        <div className="flex gap-6 mt-3">
+          <div className="text-blue-500 font-bold text-3xl">
+            0 <span className="text-black font-medium text-lg">Pending</span>
+          </div>
+          <div className="text-red-500 font-bold text-3xl">
+            0 <span className="text-black font-medium text-lg">Overdue</span>
+          </div>
+        </div>
+      </div>
+      <div>{d.icon}</div>
+    </div>
+  ))}
+</div>
+
+
 
 {/** ---------------------- Week Timelogs Section ------------------------- */}
 <div className="grid lg:grid-cols-1 mt-6 md:grid-cols-2 grid-cols-1 gap-6">
