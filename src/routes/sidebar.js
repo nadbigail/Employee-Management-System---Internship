@@ -1,23 +1,5 @@
 /** Icons are imported separatly to reduce build time */
-import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon'
-import BoltIcon from '@heroicons/react/24/outline/BoltIcon'
-import CalendarDaysIcon from '@heroicons/react/24/outline/CalendarDaysIcon'
-import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
-import CodeBracketSquareIcon from '@heroicons/react/24/outline/CodeBracketSquareIcon'
-import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
-import CurrencyDollarIcon from '@heroicons/react/24/outline/CurrencyDollarIcon'
-import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
-import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon'
-import DocumentTextIcon from '@heroicons/react/24/outline/DocumentTextIcon'
-import ExclamationTriangleIcon from '@heroicons/react/24/outline/ExclamationTriangleIcon'
-import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
-import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
-import { FaBriefcase, FaBusinessTime, FaCalendarDays, FaChalkboardUser, FaCheckToSlot, FaDoorOpen, FaFolderOpen, FaHouse, FaMedal, FaMessage, FaMoneyBill1Wave, FaPlaneDeparture, FaRegAddressCard, FaScrewdriverWrench, FaSliders, FaTicket, FaUsersLine } from "react-icons/fa6";
-import TableCellsIcon from '@heroicons/react/24/outline/TableCellsIcon'
-import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon'
-import UserIcon from '@heroicons/react/24/outline/UserIcon'
-import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
-import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
+import { FaBriefcase, FaBusinessTime, FaCalendarDays, FaChalkboardUser, FaCheckToSlot, FaDoorOpen, FaFolderOpen, FaHouse, FaMedal, FaMessage, FaMoneyBill1Wave, FaPlaneDeparture, FaRegAddressCard, FaScrewdriverWrench, FaSliders, FaTicket, FaUsersLine } from "react-icons/fa6"
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -62,31 +44,31 @@ const routes = [
     ]
   },
   {
-    path: '', //no url needed as this has submenu
-    icon: <FaBriefcase className={`${iconClasses} inline` }/>, // icon component
-    name: 'Work', // name that appear in Sidebar
-    submenu : [
+    path: '', // no direct path karena ada submenu
+    icon: <FaBriefcase className={`${iconClasses} inline`} />,
+    name: 'Work',
+    submenu: [
       {
-        path: '/app/work-projects', //url
-        icon: <FaScrewdriverWrench className={submenuIconClasses}/>, // icon component
-        name: 'Projects', // name that appear in Sidebar
+        path: '/app/work-projects',
+        icon: <FaScrewdriverWrench className={submenuIconClasses} />,
+        name: 'Projects',
       },
       {
         path: '/app/work-tasks',
-        icon: <FaFolderOpen className={submenuIconClasses}/>,
+        icon: <FaFolderOpen className={submenuIconClasses} />,
         name: 'Tasks',
       },
       {
-        path: '/app/work-timesheet', // url
-        icon: <FaBusinessTime className={submenuIconClasses}/>, // icon component
-        name: 'Timesheet', // name that appear in Sidebar
+        path: '/app/work-timesheet',
+        icon: <FaBusinessTime className={submenuIconClasses} />,
+        name: 'Timesheet',
       },
     ]
-  },
-  {
-    path: '/app/finance', // url
-    icon: <FaMoneyBill1Wave className={iconClasses}/>, // icon component
-    name: 'Finance', // name that appear in Sidebar
+},  
+{
+    path: '/app/finance',
+    icon: <FaMoneyBill1Wave className={iconClasses}/>,
+    name: 'Finance',
   },
   {
     path: '/app/tickets', // url

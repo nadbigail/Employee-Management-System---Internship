@@ -17,6 +17,10 @@ const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
+const Projects = lazy(() => import('../pages/protected/Projects'))
+const Task = lazy(() => import('../pages/protected/Task'))
+const Timesheet = lazy(() => import('../pages/protected/Timesheet'))
+const Finance = lazy(() => import('../pages/protected/Finance'))
 
 
 const routes = [
@@ -76,6 +80,22 @@ const routes = [
   {
     path: '/blank',
     component: Blank,
+  },
+  {
+    path: '/work-projects',
+    component: Projects,
+  },
+  {
+    path: '/work-tasks',
+    component: Task,
+  },
+  {
+    path: '/work-timesheet',
+    component: Timesheet,
+  },
+  {
+    path: '/finance',
+    component: Finance,
   },
 ]
 
