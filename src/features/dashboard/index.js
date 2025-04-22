@@ -1,9 +1,7 @@
-import DashboardStats from './components/DashboardStats'
 
-import CreditCardIcon from '@heroicons/react/24/outline/CreditCardIcon'
-import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon'
-import { useDispatch } from 'react-redux'
-import { showNotification } from '../common/headerSlice'
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
 
 
 const statsData = [
@@ -31,42 +29,101 @@ const statsData = [
 
 function Dashboard(){
 
-    const dispatch = useDispatch()
- 
+    const dispatch = useDispatch();
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [isClockedIn, setIsClockedIn] = useState(false);
+const [clockInTime, setClockInTime] = useState(null);
+const [durationWorked, setDurationWorked] = useState(null);
+const [weekTimeLogs, setWeekTimeLogs] = useState([]);
+
+
+
+    useEffect(() => {
+      const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+      return () => clearInterval(timer);
+    }, []);
 
     const updateDashboardPeriod = (newRange) => {
         // Dashboard range changed, write code to refresh your values
-        dispatch(showNotification({message : `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status : 1}))
+        const periodMessage = `Period updated to ${new Date(newRange.startDate).toLocaleDateString('en-GB', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        })} to ${new Date(newRange.endDate).toLocaleDateString('en-GB', {
+          weekday: 'long',
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        })}`;
+        dispatch(showNotification({ message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status: 1 }));
     }
 
     return(
         <>
-        {/* ---------------------- Header Welcome & Clock In ------------------------- */}
-<div className="bg-gray-100 px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
-  <div className="text-gray-700 text-[20px]">Welcome, Jane Doe</div>
+      
+        <div className="bg-gray-100 px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+          <div className="text-gray-700 text-[20px]">Welcome, Jane Doe</div>
 
-  <div className="flex items-center gap-4">
-    <div className="text-right">
-      <div className="text-[20px] font-bold text-gray-800">
-        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-      </div>
-      <div className="text-sm text-gray-500">
-        {new Date().toLocaleDateString('en-GB', {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        })}
-      </div>
-    </div>
-    <button className="bg-gray-800 text-white text-[16px] px-4 py-2 rounded-lg flex items-center gap-1">
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      Clock In
-    </button>
-  </div>
-</div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-lg font-semibold text-gray-800">
+                {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </div>
+              <div className="text-sm text-gray-500">
+              {currentTime.toLocaleDateString('en-GB', {
+  weekday: 'long',
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric'
+})}
 
-        
-        {/** ---------------------- Different stats content 1 ------------------------- */}
+              </div>
+            </div>
+            <button
+  onClick={() => {
+    if (!isClockedIn) {
+      setClockInTime(new Date());
+      setIsClockedIn(true);
+      setDurationWorked(null);
+    } else {
+      const now = new Date();
+      const diffMs = now - clockInTime;
+      const totalMinutes = Math.floor(diffMs / 60000);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      const durationStr = `${hours}h ${minutes}m`;
+      setDurationWorked(durationStr);
+      setIsClockedIn(false);
+  
+      const day = now.toLocaleDateString('en-US', { weekday: 'long' });
+  
+      setWeekTimeLogs(prevLogs => [
+        ...prevLogs,
+        {
+          day,
+          date: now.toLocaleDateString(),
+          duration: durationStr,
+        },
+      ]);
+    }
+  }}
+  
+  className={`${
+    isClockedIn ? 'bg-red-600' : 'bg-gray-800'
+  } text-white text-[16px] px-4 py-2 rounded-lg flex items-center gap-1`}
+>
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+  {isClockedIn ? 'Clock Out' : 'Clock In'}
+</button>
+
+          </div>
+        </div>
+
+                
+                {/** ---------------------- Different stats content 1 ------------------------- */}
         <div className="grid lg:grid-cols-2 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
   {statsData.map((d, k) => (
     <div key={k} className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
