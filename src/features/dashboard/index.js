@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../common/headerSlice';
+import Calendar from './components/Calendar';
 import WeekTimeLogs from './components/WeekTimelogs';
 
 
@@ -275,74 +276,7 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
   </div>
 
   {/* My Calendar */}
-<div className="bg-white rounded-xl shadow p-4">
-  <div className="border-b pb-2 mb-4">
-    <h2 className="text-lg font-semibold text-gray-700">My Calendar</h2>
-  </div>
-  <div className="text-sm text-gray-700">
-    <div className="flex justify-between items-center mb-4">
-      <div className="space-x-2">
-        <span className="text-gray-500 cursor-pointer">month</span>
-        <span className="text-gray-400 cursor-pointer">week</span>
-        <span className="text-gray-400 cursor-pointer">day</span>
-        <span className="text-gray-400 cursor-pointer">list</span>
-      </div>
-      <div className="font-semibold">September 2022</div>
-      <div className="space-x-2">
-        <button className="text-gray-400">&lt;</button>
-        <button className="text-gray-400">&gt;</button>
-      </div>
-    </div>
-
-    <table className="w-full table-fixed text-center text-sm text-gray-800 border-collapse">
-      <thead>
-        <tr className="text-gray-500">
-          <th className="py-2 w-[14.28%]">SUN</th>
-          <th className="py-2 w-[14.28%]">MON</th>
-          <th className="py-2 w-[14.28%]">TUE</th>
-          <th className="py-2 w-[14.28%]">WED</th>
-          <th className="py-2 w-[14.28%]">THU</th>
-          <th className="py-2 w-[14.28%]">FRI</th>
-          <th className="py-2 w-[14.28%]">SAT</th>
-        </tr>
-      </thead>
-      <tbody>
-        {[
-          ["", "", "", "", 1, 2, 3],
-          [4, 5, 6, 7, 8, 9, 10],
-          [11, 12, 13, 14, 15, 16, 17],
-          [18, 19, 20, 21, 22, 23, 24],
-          [25, 26, 27, 28, 29, 30, ""],
-        ].map((week, i) => (
-          <tr key={i}>
-            {week.map((day, j) => (
-              <td
-                key={j}
-                className="h-16 align-top relative group border-t"
-              >
-                {day && (
-                  <>
-                    <div className="text-sm">{day}</div>
-                    {/* Red dot on certain days */}
-                    {(day === 7 || day === 9 || day === 15 || day === 27) && (
-                      <span className="block w-2 h-2 bg-red-500 rounded-full mx-auto mt-1"></span>
-                    )}
-                    {/* Tooltip on 27 */}
-                    {day === 27 && (
-                      <div className="absolute left-1/2 -translate-x-1/2 mt-8 bg-yellow-300 text-black text-xs px-2 py-1 rounded shadow hidden group-hover:block z-10">
-                        Monthly Meeting
-                      </div>
-                    )}
-                  </>
-                )}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+  <Calendar /> 
 </div>
 
 
