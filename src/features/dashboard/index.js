@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../common/headerSlice';
+import WeekTimeLogs from './components/WeekTimelogs';
 
 
 const statsData = [
@@ -147,28 +148,12 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
 
 {/** ---------------------- Week Timelogs Section ------------------------- */}
 <div className="grid lg:grid-cols-1 mt-6 md:grid-cols-2 grid-cols-1 gap-6">
-  <div className="bg-white rounded-xl shadow p-6">
-    <h2 className="text-lg font-semibold text-gray-700 mb-4">Week Timelogs</h2>
 
-    <div className="flex items-center gap-3 mb-4">
-      {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day, index) => (
-        <div
-          key={index}
-          className="w-10 h-10 flex items-center justify-center rounded-full border text-sm font-semibold text-gray-600"
-        >
-          {day}
-        </div>
-      ))}
-    </div>
 
-    <div className="bg-gray-300 h-5 rounded mb-2"></div>
-
-    <div className="flex justify-between text-sm text-gray-500 mt-1">
-      <span>Duration : 0m</span>
-      <span>Break : 0m</span>
-    </div>
+    <WeekTimeLogs weekTimeLogs={weekTimeLogs} />
   </div>
-</div>
+
+
 
 
 

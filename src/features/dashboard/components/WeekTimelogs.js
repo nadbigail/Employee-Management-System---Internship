@@ -1,99 +1,54 @@
-// components/WeekTimelogs.jsx
-import { useEffect, useState } from 'react';
+import { useState } from "react";
 
-const dayLabels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const fullDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-function getTodayKey() {
-  return new Date().toISOString().split('T')[0];
-}
+const WeekTimelogs = ({ weekTimeLogs }) => {
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
 
-function getDayIndex(dateStr) {
-  const date = new Date(dateStr);
-  const day = date.getDay();
-  return day === 0 ? 6 : day - 1;
-}
+  const selectedDay = fullDays[selectedDayIndex];
+  const log = weekTimeLogs.find((entry) => entry.day === selectedDay);
 
-export default function WeekTimelogs() {
-  const [clockInTime, setClockInTime] = useState(null);
-  const [timelogs, setTimelogs] = useState(Array(7).fill({ duration: 0, break: 0 }));
-
-  useEffect(() => {
-    const saved = localStorage.getItem('timelogs-week');
-    if (saved) {
-      setTimelogs(JSON.parse(saved));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('timelogs-week', JSON.stringify(timelogs));
-  }, [timelogs]);
-
-  const handleClockIn = () => {
-    setClockInTime(new Date());
-  };
-
-  const handleClockOut = () => {
-    if (!clockInTime) return;
-
-    const clockOut = new Date();
-    const diffMinutes = Math.round((clockOut - clockInTime) / 60000);
-    const breakMinutes = 30;
-    const workMinutes = Math.max(0, diffMinutes - breakMinutes);
-
-    const index = getDayIndex(getTodayKey());
-    const updated = [...timelogs];
-    updated[index] = {
-      duration: (updated[index]?.duration || 0) + workMinutes,
-      break: (updated[index]?.break || 0) + breakMinutes,
-    };
-
-    setTimelogs(updated);
-    setClockInTime(null);
-  };
-
-  const totalDuration = timelogs.reduce((acc, day) => acc + (day.duration || 0), 0);
-  const totalBreak = timelogs.reduce((acc, day) => acc + (day.break || 0), 0);
+  const [h, m] = log?.duration?.split(/[hm ]/).filter(Boolean).map(Number) || [0, 0];
+  const totalMinutes = h * 60 + m;
+  const percent = Math.min((totalMinutes / 480) * 100, 100); // 8 hours = 480 minutes
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Week Timelogs</h2>
+    <div className="bg-white rounded-xl shadow p-6 w-full">
+      <h2 className="text-lg font-semibold text-gray-700 mb-4">Week Timelogs</h2>
 
-      <div className="flex gap-4 mb-4">
-        {dayLabels.map((label, i) => (
-          <div key={i} className="w-10 h-10 flex items-center justify-center border rounded-full text-sm text-gray-700">
-            {label}
-          </div>
+      {/* Day selectors */}
+      <div className="flex justify-start space-x-2 mb-4">
+        {daysOfWeek.map((shortDay, idx) => (
+          <button
+            key={shortDay}
+            onClick={() => setSelectedDayIndex(idx)}
+            className={`w-9 h-9 rounded-full text-sm font-medium border ${
+              idx === selectedDayIndex
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {shortDay}
+          </button>
         ))}
       </div>
 
-      <div className="h-4 bg-gray-300 rounded mb-2">
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-300 rounded-full h-4 mb-2">
         <div
-          className="h-4 bg-blue-600 rounded"
-          style={{ width: `${(totalDuration / (7 * 480)) * 100}%` }}
+          className="bg-gray-900 h-4 rounded-full"
+          style={{ width: `${percent}%` }}
         ></div>
       </div>
 
-      <div className="flex justify-between text-sm text-gray-600 mb-6">
-        <span>Duration : {totalDuration}m</span>
-        <span>Break : {totalBreak}m</span>
-      </div>
-
-      <div className="flex gap-3">
-        <button
-          onClick={handleClockIn}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300"
-          disabled={!!clockInTime}
-        >
-          Clock In
-        </button>
-        <button
-          onClick={handleClockOut}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:bg-red-300"
-          disabled={!clockInTime}
-        >
-          Clock Out
-        </button>
+      {/* Duration & Break Info */}
+      <div className="flex justify-between text-sm text-gray-500">
+        <span>Duration: {log?.duration || '0m'}</span>
+        <span>Break: {log?.break || '0m'}</span> {/* Ensure you have a break property in your logs if you want to display it */}
       </div>
     </div>
   );
-}
+};
+
+export default WeekTimelogs;
