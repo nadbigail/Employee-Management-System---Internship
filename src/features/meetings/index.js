@@ -1,11 +1,23 @@
 import { useState } from 'react';
-import { Phone, Calendar, Plus, MoreHorizontal, User, Search, ChevronDown, X } from 'lucide-react';
+import { MoreHorizontal, Plus, Calendar, Clock, ChevronDown, X, Search, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function Dashboard() {
   const [meetingName, setMeetingName] = useState('');
-  const [showPeopleDropdown, setShowPeopleDropdown] = useState(false);
+  const [meetingLink, setMeetingLink] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedStartTime, setSelectedStartTime] = useState('');
+  const [selectedEndTime, setSelectedEndTime] = useState('');
+  
+  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+  const [showAddPeopleDropdown, setShowAddPeopleDropdown] = useState(false);
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [activeMeetingId, setActiveMeetingId] = useState(null);
+
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
+  
+  const [displayMonth, setDisplayMonth] = useState(currentMonth);
+  const [displayYear, setDisplayYear] = useState(currentYear);
   
   const people = [
     { id: 'SN', name: 'Sara Nadya', avatar: 'SN', selected: false },
@@ -36,73 +48,232 @@ export default function Dashboard() {
     setShowAddPeopleModal(true);
   };
 
+  const getMonthDays = (year, month) => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i);
+    }
+    
+    return days;
+  };
+
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const days = getMonthDays(displayYear, displayMonth);
+  
+  const nextMonth = () => {
+    if (displayMonth === 11) {
+      setDisplayMonth(0);
+      setDisplayYear(displayYear + 1);
+    } else {
+      setDisplayMonth(displayMonth + 1);
+    }
+  };
+  
+  const prevMonth = () => {
+    if (displayMonth === 0) {
+      setDisplayMonth(11);
+      setDisplayYear(displayYear - 1);
+    } else {
+      setDisplayMonth(displayMonth - 1);
+    }
+  };
+
+  const handleSelectDate = (day) => {
+    if (day) {
+      const date = new Date(displayYear, displayMonth, day);
+      const formattedDate = `${day} ${monthNames[displayMonth]} ${displayYear}`;
+      setSelectedDate(formattedDate);
+    }
+  };
+
+  const timeOptions = [];
+  for (let i = 0; i < 24; i++) {
+    for (let j = 0; j < 60; j += 30) {
+      const hour = i.toString().padStart(2, '0');
+      const minute = j.toString().padStart(2, '0');
+      timeOptions.push(`${hour}:${minute}`);
+    }
+  }
+
+  const handleSelectStartTime = (time) => {
+    setSelectedStartTime(time);
+    // Automatically set end time to be 1 hour after start time
+    const [hours, minutes] = time.split(':').map(Number);
+    let endHour = hours + 1;
+    if (endHour >= 24) endHour = 23;
+    const endTime = `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    setSelectedEndTime(endTime);
+  };
+
+  const handleSelectEndTime = (time) => {
+    setSelectedEndTime(time);
+  };
+
+  const handleSubmit = () => {
+    // Here you would typically submit the new meeting data to a backend
+    console.log({
+      meetingName,
+      selectedDate,
+      selectedStartTime,
+      selectedEndTime,
+      meetingLink
+    });
+    
+    // Reset form
+    setMeetingName('');
+    setSelectedDate('');
+    setSelectedStartTime('');
+    setSelectedEndTime('');
+    setMeetingLink('');
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {/* New Meeting Card */}
-          <div className="bg-gray-900 text-white rounded-lg p-6 flex flex-col items-center justify-center h-40">
-            <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center mb-3">
-              <Phone className="w-6 h-6" />
-            </div>
-            <div className="text-center">
-              <p className="font-semibold text-lg mb-1">New Meeting</p>
-              <p className="text-sm text-gray-400">Start New Meeting</p>
-            </div>
-          </div>
-          
-          {/* Join Meeting Card */}
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center justify-center shadow-sm h-40">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <Plus className="w-6 h-6" />
-            </div>
-            <div className="text-center">
-              <p className="font-semibold text-lg mb-1">Join Meeting</p>
-              <p className="text-sm text-gray-500">Via Invitation Link</p>
-            </div>
-          </div>
-          
-          {/* Schedule Meeting Card */}
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center justify-center shadow-sm h-40">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <Calendar className="w-6 h-6" />
-            </div>
-            <div className="text-center">
-              <p className="font-semibold text-lg mb-1">Schedule Meeting</p>
-              <p className="text-sm text-gray-500">Plan Your Meeting</p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Start New Meeting Section */}
+        {/* Add a new meeting schedule */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Start a new meeting now</h2>
+          <h2 className="text-2xl font-bold mb-6">Add a new meeting schedule</h2>
           
-          {/* Meeting Name Input */}
-          <div className="mb-5">
-            <div className="w-full border border-gray-300 rounded-lg p-4 flex justify-between items-center">
-              <input
-                type="text"
-                placeholder="Name of the meeting"
-                className="w-full text-gray-700 outline-none border-none bg-transparent"
-                value={meetingName}
-                onChange={(e) => setMeetingName(e.target.value)}
-              />
-            </div>
+          {/* Meeting Name Input - Updated with gray background */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Name of the meeting"
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg p-4 outline-none"
+              value={meetingName}
+              onChange={(e) => setMeetingName(e.target.value)}
+            />
           </div>
           
-          {/* Add People Dropdown */}
-          <div className="mb-5 relative">
+          {/* Date and Time Picker */}
+          <div className="mb-4 relative">
             <div 
-              className="w-full border border-gray-300 rounded-lg p-4 flex justify-between items-center cursor-pointer"
-              onClick={() => setShowPeopleDropdown(!showPeopleDropdown)}
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg p-4 flex justify-between items-center cursor-pointer"
+              onClick={() => setShowDateTimePicker(!showDateTimePicker)}
             >
-              <span className="text-gray-600">Add People</span>
+              <span className={selectedDate && selectedStartTime ? "text-gray-900" : "text-gray-500"}>
+                {selectedDate && selectedStartTime 
+                  ? `${selectedDate}, ${selectedStartTime}-${selectedEndTime} WIB`
+                  : "Select Date and Time"}
+              </span>
               <ChevronDown className="w-5 h-5" />
             </div>
             
-            {showPeopleDropdown && (
+            {showDateTimePicker && (
+              <div className="absolute z-20 mt-1 w-full bg-white rounded-lg border border-gray-200 shadow-lg">
+                <div className="p-4">
+                  {/* Calendar Header */}
+                  <div className="flex justify-between items-center mb-4">
+                    <button onClick={prevMonth} className="text-gray-500 hover:text-gray-700">
+                      &lt;
+                    </button>
+                    <h4 className="font-medium">{monthNames[displayMonth]} {displayYear}</h4>
+                    <button onClick={nextMonth} className="text-gray-500 hover:text-gray-700">
+                      &gt;
+                    </button>
+                  </div>
+                  
+                  {/* Calendar Days */}
+                  <div className="grid grid-cols-7 gap-1 mb-4">
+                    {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
+                      <div key={day} className="text-center text-sm text-gray-500 font-medium">
+                        {day}
+                      </div>
+                    ))}
+                    {days.map((day, index) => (
+                      <div 
+                        key={index} 
+                        className={`text-center py-1 ${day ? 'cursor-pointer hover:bg-gray-100 rounded-full' : ''} ${
+                          selectedDate === `${day} ${monthNames[displayMonth]} ${displayYear}` 
+                            ? 'bg-blue-100 text-blue-700 rounded-full' 
+                            : ''
+                        }`}
+                        onClick={() => handleSelectDate(day)}
+                      >
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Time Picker */}
+                  <div className="flex space-x-4 mb-4">
+                    <div className="w-1/2">
+                      <p className="text-sm text-gray-500 mb-2">Start Time</p>
+                      <select 
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        value={selectedStartTime}
+                        onChange={(e) => handleSelectStartTime(e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        {timeOptions.map((time) => (
+                          <option key={`start-${time}`} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="w-1/2">
+                      <p className="text-sm text-gray-500 mb-2">End Time</p>
+                      <select 
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        value={selectedEndTime}
+                        onChange={(e) => handleSelectEndTime(e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        {timeOptions.map((time) => (
+                          <option key={`end-${time}`} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <button 
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                      onClick={() => setShowDateTimePicker(false)}
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Meeting Link Input - Updated with gray background */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Meeting Link"
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg p-4 outline-none"
+              value={meetingLink}
+              onChange={(e) => setMeetingLink(e.target.value)}
+            />
+          </div>
+          
+          {/* Add People Dropdown */}
+          <div className="mb-4 relative">
+            <div 
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg p-4 flex justify-between items-center cursor-pointer"
+              onClick={() => setShowAddPeopleDropdown(!showAddPeopleDropdown)}
+            >
+              <span className="text-gray-500">Add People</span>
+              <ChevronDown className="w-5 h-5" />
+            </div>
+            
+            {showAddPeopleDropdown && (
               <div className="absolute z-10 mt-1 w-full bg-white rounded-lg border border-gray-200 shadow-lg">
                 <div className="p-3 border-b border-gray-200">
                   <div className="relative">
@@ -119,19 +290,20 @@ export default function Dashboard() {
                   {people.map((person) => (
                     <div 
                       key={person.id}
-                      className={`flex items-center justify-between p-3 hover:bg-gray-50 ${person.selected && person.isYou ? 'bg-blue-900 text-white' : ''}`}
+                      className="flex items-center justify-between p-3 hover:bg-gray-50"
                     >
                       <div className="flex items-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 ${person.selected && person.isYou ? 'bg-blue-500' : 'bg-gray-200'}`}>
+                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm mr-3">
                           {person.avatar}
                         </div>
                         <span>{person.name}</span>
                       </div>
-                      {person.isYou && (
-                        <span className={`text-xs px-2 py-1 rounded ${person.selected ? 'bg-blue-500' : 'bg-blue-500'} text-white`}>
-                          it's you
-                        </span>
-                      )}
+                      <input 
+                        type="checkbox" 
+                        className="w-4 h-4 rounded text-blue-600" 
+                        checked={person.selected || person.isYou}
+                        readOnly={person.isYou}
+                      />
                     </div>
                   ))}
                 </div>
@@ -139,9 +311,12 @@ export default function Dashboard() {
             )}
           </div>
           
-          {/* Start Now Button */}
-          <button className="bg-gray-900 text-white py-3 px-8 rounded-lg font-medium">
-            Start Now
+          {/* Add Button */}
+          <button 
+            className="bg-gray-900 text-white py-3 px-8 rounded-lg font-medium"
+            onClick={handleSubmit}
+          >
+            Add
           </button>
         </div>
         
@@ -164,7 +339,7 @@ export default function Dashboard() {
                 <div className="mb-6">
                   <div className="flex items-center mb-2">
                     <span className="text-red-500 mr-2">
-                      <Calendar className="w-5 h-5" />
+                      <CalendarIcon className="w-5 h-5" />
                     </span>
                     <span className="text-sm">{meeting.date}</span>
                   </div>
@@ -179,12 +354,12 @@ export default function Dashboard() {
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-2">
                     {meeting.attendees.map((attendee, index) => (
-                      <div key={index} className="bg-gray-200 text-xs font-medium py-1 px-3 rounded">
+                      <div key={index} className="bg-gray-200 text-xs font-medium py-1 px-3 rounded-full">
                         {attendee}
                       </div>
                     ))}
                     <div 
-                      className="bg-gray-200 text-xs py-1 px-2 rounded flex items-center justify-center cursor-pointer hover:bg-gray-300"
+                      className="bg-gray-200 text-xs py-1 px-2 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300"
                       onClick={() => handleAddPeopleClick(meeting.id)}
                     >
                       <Plus className="w-3 h-3" />
@@ -263,23 +438,5 @@ export default function Dashboard() {
         </div>
       )}
     </div>
-  );
-}
-
-function Clock({ className }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
   );
 }
