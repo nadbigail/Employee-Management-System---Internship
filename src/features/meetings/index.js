@@ -20,14 +20,14 @@ export default function Dashboard() {
       title: 'Weekly Office Group Meeting', 
       date: '16 May 2025', 
       time: '15:00-17:00 WIB',
-      attendees: ['SN', 'NA', 'EW'] 
+      attendees: ['SN', 'NA', 'EA'] 
     },
     { 
       id: 2, 
       title: 'Monthly Office Group Meeting', 
       date: '25 May 2025', 
       time: '15:00-17:00 WIB',
-      attendees: ['SN', 'NA', 'EW'] 
+      attendees: ['SN', 'NA', 'EA'] 
     }
   ];
 
