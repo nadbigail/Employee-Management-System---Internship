@@ -1,5 +1,6 @@
 /** Icons are imported separatly to reduce build time */
-import { FaBriefcase, FaBusinessTime, FaCalendarDays, FaChalkboardUser, FaCheckToSlot, FaDoorOpen, FaFolderOpen, FaHouse, FaMedal, FaMessage, FaMoneyBill1Wave, FaPlaneDeparture, FaRegAddressCard, FaScrewdriverWrench, FaSliders, FaTicket, FaUsersLine } from "react-icons/fa6"
+
+import { LiaAddressCardSolid, LiaBriefcaseSolid, LiaBuromobelexperte, LiaBusinessTimeSolid, LiaCalendar, LiaCalendarCheck, LiaChalkboardSolid, LiaClipboardListSolid, LiaCommentsSolid, LiaDoorOpenSolid, LiaMedalSolid, LiaMoneyCheckAltSolid, LiaNewspaper, LiaPlaneDepartureSolid, LiaTicketAltSolid, LiaToolsSolid, LiaUserTieSolid } from "react-icons/lia";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -8,91 +9,96 @@ const routes = [
 
   {
     path: '/app/dashboard',
-    icon: <FaHouse className={iconClasses}/>, 
+    icon:<LiaBuromobelexperte className={iconClasses} />,  
     name: 'Dashboard',
   },
   {
-    path: '/app/leads', // url
-    icon: <FaUsersLine className={iconClasses}/>, // icon component
-    name: 'Leads', // name that appear in Sidebar
+    path: '/app/leads', 
+    icon: <LiaUserTieSolid className={iconClasses} />, 
+    name: 'Leads', 
   },
   {
     path: '', //no url needed as this has submenu
-    icon: <FaRegAddressCard className={`${iconClasses} inline` }/>, // icon component
+    icon: <LiaAddressCardSolid className={`${iconClasses} inline` }/>, // icon component
     name: 'HR', // name that appear in Sidebar
     submenu : [
       {
         path: '/app/hr-leaves', //url
-        icon: <FaDoorOpen className={submenuIconClasses}/>, // icon component
+        icon: <LiaDoorOpenSolid className={submenuIconClasses}/>, // icon component
         name: 'Leaves', // name that appear in Sidebar
       },
       {
         path: '/app/hr-attendance',
-        icon: <FaCheckToSlot className={submenuIconClasses}/>,
+        icon: <LiaCalendarCheck className={submenuIconClasses}/>,
         name: 'Attendance',
       },
       {
         path: '/app/hr-holiday', // url
-        icon: <FaPlaneDeparture className={submenuIconClasses}/>, // icon component
+        icon: <LiaPlaneDepartureSolid className={submenuIconClasses}/>, // icon component
         name: 'Holiday', // name that appear in Sidebar
       },
       {
         path: '/app/hr-appreciation', // url
-        icon: <FaMedal className={submenuIconClasses}/>, // icon component
+        icon: <LiaMedalSolid className={submenuIconClasses}/>, // icon component
         name: 'Appreciation', // name that appear in Sidebar
       },
     ]
   },
   {
     path: '', // no direct path karena ada submenu
-    icon: <FaBriefcase className={`${iconClasses} inline`} />,
+    icon: <LiaBriefcaseSolid className={`${iconClasses} inline`} />,
     name: 'Work',
     submenu: [
       {
         path: '/app/work-projects',
-        icon: <FaScrewdriverWrench className={submenuIconClasses} />,
+        icon: <LiaToolsSolid className={submenuIconClasses} />,
         name: 'Projects',
       },
       {
         path: '/app/work-tasks',
-        icon: <FaFolderOpen className={submenuIconClasses} />,
+        icon: <LiaClipboardListSolid className={submenuIconClasses} />,
         name: 'Tasks',
       },
       {
         path: '/app/work-timesheet',
-        icon: <FaBusinessTime className={submenuIconClasses} />,
+        icon: <LiaBusinessTimeSolid className={submenuIconClasses} />,
         name: 'Timesheet',
       },
     ]
 },  
 {
     path: '/app/finance',
-    icon: <FaMoneyBill1Wave className={iconClasses}/>,
+    icon: <LiaMoneyCheckAltSolid className={iconClasses}/>,
     name: 'Finance',
   },
   {
+    path: '/app/meetings',
+    icon: <LiaCalendar className={iconClasses}/>,
+    name: 'Meetings',
+  },
+  {
     path: '/app/tickets', // url
-    icon: <FaTicket className={iconClasses}/>, // icon component
+    icon: <LiaTicketAltSolid className={iconClasses}/>, // icon component
     name: 'Tickets', // name that appear in Sidebar
   },
   {
     path: '/app/events', // url
-    icon: <FaCalendarDays className={iconClasses}/>, // icon component
+    icon: <LiaNewspaper className={iconClasses}/>, // icon component
     name: 'Events', // name that appear in Sidebar
   },
   {
     path: '/app/messages', // url
-    icon: <FaMessage className={iconClasses}/>, // icon component
+    icon: <LiaCommentsSolid className={iconClasses}/>, // icon component
     name: 'Messages', // name that appear in Sidebar
   },
   {
     path: '/app/noticeboard', // url
-    icon: <FaChalkboardUser className={iconClasses}/>, // icon component
+    icon: <LiaChalkboardSolid className={iconClasses}/>, // icon component
     name: 'Notice Board', // name that appear in Sidebar
   },
   {
     path: '/app/settings', // url
-    icon: <FaSliders className={iconClasses}/>, // icon component
+    icon: <LiaChalkboardSolid className={iconClasses}/>, // icon component
     name: 'Settings', // name that appear in Sidebar
   },
 ]
