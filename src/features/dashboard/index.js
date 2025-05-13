@@ -9,8 +9,8 @@ import WeekTimeLogs from './components/WeekTimelogs';
 const statsData = [
   {
     title: "Task",
-    pending: 0,
-    overdue: 0,
+    pending: 4,
+    overdue: 1,
     icon: (
       <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h8m-8 6h16" />
@@ -19,7 +19,7 @@ const statsData = [
   },
   {
     title: "Projects",
-    pending: 0,
+    pending: 3,
     overdue: 0,
     icon: (
       <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -132,13 +132,14 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
       <div>
         <div className="font-semibold text-gray-700 text-xl">{d.title}</div>
         <div className="flex gap-6 mt-3">
-          <div className="text-blue-500 font-bold text-3xl">
-            0 <span className="text-black font-medium text-lg">Pending</span>
-          </div>
-          <div className="text-red-500 font-bold text-3xl">
-            0 <span className="text-black font-medium text-lg">Overdue</span>
-          </div>
-        </div>
+  <div className="text-blue-500 font-bold text-3xl">
+    {d.pending} <span className="text-black font-medium text-lg">Pending</span>
+  </div>
+  <div className="text-red-500 font-bold text-3xl">
+    {d.overdue} <span className="text-black font-medium text-lg">Overdue</span>
+  </div>
+</div>
+
       </div>
       <div>{d.icon}</div>
     </div>
@@ -162,15 +163,41 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
 <div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
 
 {/* Birthdays */}
+{/* Birthdays */}
 <div className="bg-white rounded-xl shadow p-4">
   <div className="border-b pb-2 mb-4">
     <h2 className="text-lg font-semibold text-gray-700">Birthdays</h2>
   </div>
-  <div className="flex flex-col items-center justify-center text-gray-400 py-8">
-    <i className="fa-solid fa-cake-candles text-3xl mb-2"></i>
-    <span className="text-sm italic">– No record found. –</span>
+  <div className="overflow-x-auto">
+    <table className="min-w-full text-left text-sm text-gray-600">
+      <thead className="text-xs uppercase text-gray-500 border-b">
+        <tr>
+          <th scope="col" className="py-3 px-4">#</th>
+          <th scope="col" className="py-3 px-4">Name</th>
+          <th scope="col" className="py-3 px-4">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="border-b">
+          <td className="py-3 px-4">1</td>
+          <td className="py-3 px-4">Nadine Abigail</td>
+          <td className="py-3 px-4">May 3rd</td>
+        </tr>
+        <tr className="border-b">
+          <td className="py-3 px-4">2</td>
+          <td className="py-3 px-4">Eunike Alfrita Maharani</td>
+          <td className="py-3 px-4">May 14th</td>
+        </tr>
+        <tr>
+          <td className="py-3 px-4">3</td>
+          <td className="py-3 px-4">Sara Nadya Maharani</td>
+          <td className="py-3 px-4">May 25th</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
 
 {/* My Task */}
 <div className="bg-white rounded-xl shadow p-4">
@@ -187,16 +214,49 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
           <th className="py-2 px-2">Due Date</th>
         </tr>
       </thead>
-      <tbody>
-        <tr className="text-center">
-          <td colSpan="4" className="py-6 text-gray-400">
-            <div className="flex justify-center mb-2 text-2xl">
-              <i className="fa-solid fa-list-check"></i>
-            </div>
-            <span className="italic text-sm">– No record found. –</span>
-          </td>
-        </tr>
-      </tbody>
+      <tbody className="text-gray-700">
+  <tr>
+    <td className="py-2 px-2">1</td>
+    <td className="py-2 px-2">Submit weekly report</td>
+    <td className="py-2 px-2">
+      <span className="text-yellow-600 font-semibold">Pending</span>
+    </td>
+    <td className="py-2 px-2">May 14th, 2025</td>
+  </tr>
+  <tr>
+    <td className="py-2 px-2">2</td>
+    <td className="py-2 px-2">Client presentation prep</td>
+    <td className="py-2 px-2">
+      <span className="text-yellow-600 font-semibold">Pending</span>
+    </td>
+    <td className="py-2 px-2">May 15th, 2025</td>
+  </tr>
+  <tr>
+    <td className="py-2 px-2">3</td>
+    <td className="py-2 px-2">Team meeting notes</td>
+    <td className="py-2 px-2">
+      <span className="text-yellow-600 font-semibold">Pending</span>
+    </td>
+    <td className="py-2 px-2">May 16th, 2025</td>
+  </tr>
+  <tr>
+    <td className="py-2 px-2">4</td>
+    <td className="py-2 px-2">Code review for Project X</td>
+    <td className="py-2 px-2">
+      <span className="text-yellow-600 font-semibold">Pending</span>
+    </td>
+    <td className="py-2 px-2">May 17th, 2025</td>
+  </tr>
+  <tr className="bg-red-50">
+    <td className="py-2 px-2">5</td>
+    <td className="py-2 px-2">Update client feedback</td>
+    <td className="py-2 px-2">
+      <span className="text-red-600 font-semibold">Overdue</span>
+    </td>
+    <td className="py-2 px-2">May 10th, 2025</td>
+  </tr>
+</tbody>
+
     </table>
   </div>
 </div>
@@ -209,11 +269,38 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
 {/* Employee Appreciations */}
 <div className="bg-white rounded-xl shadow p-4">
   <div className="border-b pb-2 mb-4">
-    <h2 className="text-lg font-semibold text-gray-700">Employee Appreciations</h2>
-  </div>
-  <div className="flex flex-col items-center justify-center text-gray-400 py-8">
-    <i className="fa-solid fa-cake-candles text-3xl mb-2"></i>
-    <span className="text-sm italic">– No record found. –</span>
+  <div className="overflow-x-auto">
+  <table className="min-w-full text-left text-sm text-gray-600">
+    <thead className="text-xs uppercase text-gray-500 border-b">
+      <tr>
+        <th scope="col" className="py-3 px-4">#</th>
+        <th scope="col" className="py-3 px-4">Name</th>
+        <th scope="col" className="py-3 px-4">Appreciation</th>
+        <th scope="col" className="py-3 px-4">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className="border-b">
+        <td className="py-3 px-4">1</td>
+        <td className="py-3 px-4">Kevin Hartanto</td>
+        <td className="py-3 px-4">Praised by client for fast response on the ABC project</td>
+        <td className="py-3 px-4">May 12th, 2025</td>
+      </tr>
+      <tr className="border-b">
+        <td className="py-3 px-4">2</td>
+        <td className="py-3 px-4">Felicia Anggraini</td>
+        <td className="py-3 px-4">Completed system migration 3 days ahead of schedule</td>
+        <td className="py-3 px-4">May 10th, 2025</td>
+      </tr>
+      <tr>
+        <td className="py-3 px-4">3</td>
+        <td className="py-3 px-4">Rafi Dirgantara</td>
+        <td className="py-3 px-4">Organized a successful internal workshop on AI tools</td>
+        <td className="py-3 px-4">May 8th, 2025</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
   </div>
 </div>
 
@@ -223,8 +310,8 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
     <h2 className="text-lg font-semibold text-gray-700">Tickets</h2>
   </div>
   <div className="overflow-x-auto">
-    <table className="w-full text-sm text-gray-500">
-      <thead className="text-left text-gray-500 border-b">
+    <table className="w-full text-sm text-gray-600">
+      <thead className="text-left text-gray-500 border-b text-xs uppercase">
         <tr>
           <th className="py-2 px-2">#</th>
           <th className="py-2 px-2">Task</th>
@@ -233,19 +320,40 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
         </tr>
       </thead>
       <tbody>
-        <tr className="text-center">
-          <td colSpan="4" className="py-6 text-gray-400">
-            <div className="flex justify-center mb-2 text-2xl">
-              <i className="fa-solid fa-list-check"></i>
-            </div>
-            <span className="italic text-sm">– No record found. –</span>
-          </td>
+        <tr>
+          <td className="py-2 px-2">1</td>
+          <td className="py-2 px-2">Update employee handbook</td>
+          <td className="py-2 px-2 text-yellow-600 font-medium">Pending</td>
+          <td className="py-2 px-2">May 15th, 2025</td>
+        </tr>
+        <tr>
+          <td className="py-2 px-2">2</td>
+          <td className="py-2 px-2">Prepare Q2 payroll summary</td>
+          <td className="py-2 px-2 text-yellow-600 font-medium">Pending</td>
+          <td className="py-2 px-2">May 20th, 2025</td>
+        </tr>
+        <tr>
+          <td className="py-2 px-2">3</td>
+          <td className="py-2 px-2">Conduct team building survey</td>
+          <td className="py-2 px-2 text-yellow-600 font-medium">Pending</td>
+          <td className="py-2 px-2">May 16th, 2025</td>
+        </tr>
+        <tr>
+          <td className="py-2 px-2">4</td>
+          <td className="py-2 px-2">Submit audit documents</td>
+          <td className="py-2 px-2 text-yellow-600 font-medium">Pending</td>
+          <td className="py-2 px-2">May 18th, 2025</td>
+        </tr>
+        <tr>
+          <td className="py-2 px-2">5</td>
+          <td className="py-2 px-2">Fix system access issue</td>
+          <td className="py-2 px-2 text-red-600 font-semibold">Overdue</td>
+          <td className="py-2 px-2">May 10th, 2025</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-
 </div>
 
 {/** ---------------------- On Leave, WFH, and Calendar ------------------------- */}
@@ -257,10 +365,16 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
       <div className="border-b pb-2 mb-4">
         <h2 className="text-lg font-semibold text-gray-700">On Leave Today</h2>
       </div>
-      <div className="flex flex-col items-center justify-center text-gray-400 py-8 h-full">
-        <i className="fa-solid fa-plane-departure text-3xl mb-2"></i>
-        <span className="text-sm italic">– No record found. –</span>
-      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-center gap-2">
+          <i className="fa-solid fa-circle text-red-400 text-xs"></i>
+          <span className="font-medium">Christopher Angkasa</span> – Personal Leave
+        </li>
+        <li className="flex items-center gap-2">
+          <i className="fa-solid fa-circle text-red-400 text-xs"></i>
+          <span className="font-medium">Raisa Luthfi</span> – Sick Leave
+        </li>
+      </ul>
     </div>
 
     {/* On Work From Home Today */}
@@ -268,30 +382,74 @@ const [weekTimeLogs, setWeekTimeLogs] = useState([]);
       <div className="border-b pb-2 mb-4">
         <h2 className="text-lg font-semibold text-gray-700">On Work From Home Today</h2>
       </div>
-      <div className="flex flex-col items-center justify-center text-gray-400 py-8 h-full">
-        <i className="fa-solid fa-house-laptop text-3xl mb-2"></i>
-        <span className="text-sm italic">– No record found. –</span>
-      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-center gap-2">
+          <i className="fa-solid fa-circle text-green-400 text-xs"></i>
+          <span className="font-medium">Michael Santoso</span> – Remote project work
+        </li>
+        <li className="flex items-center gap-2">
+          <i className="fa-solid fa-circle text-green-400 text-xs"></i>
+          <span className="font-medium">Ayu Kartika</span> – WFH (childcare)
+        </li>
+      </ul>
     </div>
   </div>
 
   {/* My Calendar */}
-  <Calendar /> 
+  <Calendar />
 </div>
 
-
-
-        {/** ---------------------- Notice  ------------------------- */}
-        
-           {/* Notice */}
+{/** ---------------------- Notice ------------------------- */}
+{/* Notice */}
 <div className="bg-white rounded-xl shadow p-4 mt-6">
   <div className="border-b pb-2 mb-4">
     <h2 className="text-lg font-semibold text-gray-700">Notice</h2>
   </div>
-  <div className="flex items-center justify-center text-gray-400 py-10">
-    <span className="text-sm italic">– No record found. –</span>
+  <div className="overflow-x-auto">
+    <table className="w-full text-sm text-gray-500">
+      <thead className="text-left text-gray-500 border-b">
+        <tr>
+          <th className="py-2 px-2 text-left">#</th>
+          <th className="py-2 px-2 text-left">Title</th>
+          <th className="py-2 px-2 text-left">Date</th>
+          <th className="py-2 px-2 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* Notice 1 */}
+        <tr className="text-left">
+          <td className="py-3 px-2">1</td>
+          <td className="py-3 px-2">Team Meeting Scheduled</td>
+          <td className="py-3 px-2">May 13, 2025</td>
+          <td className="py-3 px-2 text-green-500">Active</td>
+        </tr>
+        {/* Notice 2 */}
+        <tr className="text-left">
+          <td className="py-3 px-2">2</td>
+          <td className="py-3 px-2">Company Event: Year End Party</td>
+          <td className="py-3 px-2">May 18, 2025</td>
+          <td className="py-3 px-2 text-blue-500">Upcoming</td>
+        </tr>
+        {/* Notice 3 */}
+        <tr className="text-left">
+          <td className="py-3 px-2">3</td>
+          <td className="py-3 px-2">Office Renovation Updates</td>
+          <td className="py-3 px-2">May 20, 2025</td>
+          <td className="py-3 px-2 text-yellow-500">Pending</td>
+        </tr>
+        {/* Notice 4 */}
+        <tr className="text-left">
+          <td className="py-3 px-2">4</td>
+          <td className="py-3 px-2">Holiday Notice</td>
+          <td className="py-3 px-2">May 22, 2025</td>
+          <td className="py-3 px-2 text-gray-500">Archived</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
+
 
         </>
     )
