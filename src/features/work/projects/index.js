@@ -1,13 +1,59 @@
 import React from 'react';
 import { FiSearch, FiSettings } from 'react-icons/fi';
 
+const projectsData = [
+  {
+    code: 'PRJ001',
+    name: 'Website Redesign',
+    members: 'Sara, Eunike',
+    startDate: '2025-01-10',
+    deadline: '2025-03-15',
+    client: 'Acme Corp',
+    status: 'Ongoing',
+  },
+  {
+    code: 'PRJ002',
+    name: 'Mobile App Dev',
+    members: 'Jane, John',
+    startDate: '2025-02-01',
+    deadline: '2025-06-01',
+    client: 'Beta Ltd',
+    status: 'Completed',
+  },
+  {
+    code: 'PRJ003',
+    name: 'Marketing Campaign',
+    members: 'Nadine, Naomi',
+    startDate: '2025-03-20',
+    deadline: '2025-05-30',
+    client: 'Gamma Inc',
+    status: 'Ongoing',
+  },
+  {
+    code: 'PRJ004',
+    name: 'E-Commerce Setup',
+    members: 'Sasha, Nabila',
+    startDate: '2025-04-10',
+    deadline: '2025-07-20',
+    client: 'Delta Co',
+    status: 'Ongoing',
+  },
+  {
+    code: 'PRJ005',
+    name: 'Data Analysis Tool',
+    members: 'Isaac, Jane',
+    startDate: '2025-05-01',
+    deadline: '2025-08-15',
+    client: 'Omega LLC',
+    status: 'Completed',
+  },
+];
+
 const ProjectsPage = () => {
   return (
     <div className="px-8 py-6 bg-gray-100 min-h-screen">
-
       {/* Filters Row */}
       <div className="flex flex-wrap gap-4 items-center bg-white p-4 rounded shadow mb-6">
-
         {/* Duration Filter */}
         <div className="flex items-center space-x-2">
           <span className="text-sm text-gray-600">Duration</span>
@@ -69,16 +115,23 @@ const ProjectsPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td colSpan={8} className="text-center py-6 text-gray-400">
-                No data available in table
-              </td>
-            </tr>
+            {projectsData.map((project, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border-b">{project.code}</td>
+                <td className="px-4 py-2 border-b">{project.name}</td>
+                <td className="px-4 py-2 border-b">{project.members}</td>
+                <td className="px-4 py-2 border-b">{project.startDate}</td>
+                <td className="px-4 py-2 border-b">{project.deadline}</td>
+                <td className="px-4 py-2 border-b">{project.client}</td>
+                <td className="px-4 py-2 border-b">{project.status}</td>
+                <td className="px-4 py-2 border-b text-blue-600 cursor-pointer hover:underline">View</td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
         <div className="flex justify-between items-center mt-4 text-sm">
-          <div>Showing 0 to 0 entries of 0 entries</div>
+          <div>Showing 1 to 5 of 5 entries</div>
           <div className="flex items-center space-x-2">
             <button className="px-3 py-1 border rounded text-gray-600 hover:bg-gray-100">Previous</button>
             <button className="px-3 py-1 border rounded text-gray-600 hover:bg-gray-100">Next</button>

@@ -544,10 +544,64 @@ export default function TimeTrackingDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              <tr>
-                <td colSpan="9" className="text-center py-6 text-gray-500">No data available in table</td>
-              </tr>
-            </tbody>
+  {[
+    {
+      code: 'TSK001',
+      task: 'Design Landing Page',
+      employee: 'Alice Johnson',
+      startTime: '2025-05-01 09:00',
+      endTime: '2025-05-01 17:00',
+      hours: '8',
+    },
+    {
+      code: 'TSK002',
+      task: 'Fix Payment Bug',
+      employee: 'Bob Smith',
+      startTime: '2025-05-02 10:00',
+      endTime: '2025-05-02 16:00',
+      hours: '6',
+    },
+    {
+      code: 'TSK003',
+      task: 'Develop Dashboard',
+      employee: 'Cathy Lee',
+      startTime: '2025-05-03 08:30',
+      endTime: '2025-05-03 17:00',
+      hours: '8.5',
+    },
+    {
+      code: 'TSK004',
+      task: 'Client Meeting',
+      employee: 'David Kim',
+      startTime: '2025-05-04 13:00',
+      endTime: '2025-05-04 15:00',
+      hours: '2',
+    },
+    {
+      code: 'TSK005',
+      task: 'Write Unit Tests',
+      employee: 'Eva Green',
+      startTime: '2025-05-05 09:00',
+      endTime: '2025-05-05 12:00',
+      hours: '3',
+    },
+  ].map((item, index) => (
+    <tr key={item.code}>
+      <td className="py-3 px-4">
+        <input type="checkbox" className="rounded" />
+      </td>
+      <td className="py-3 px-4">{index + 1}</td>
+      <td className="py-3 px-4">{item.code}</td>
+      <td className="py-3 px-4">{item.task}</td>
+      <td className="py-3 px-4">{item.employee}</td>
+      <td className="py-3 px-4">{item.startTime}</td>
+      <td className="py-3 px-4">{item.endTime}</td>
+      <td className="py-3 px-4">{item.hours}</td>
+      <td className="py-3 px-4 text-blue-600 hover:underline cursor-pointer">View</td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
 
