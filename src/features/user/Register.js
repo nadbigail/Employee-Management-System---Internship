@@ -2,69 +2,101 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import InputText from '../../components/Input/InputText'
 import ErrorText from '../../components/Typography/ErrorText'
-import LandingIntro from './LandingIntro'
 
-function Register(){
-
+function Register() {
     const INITIAL_REGISTER_OBJ = {
-        name : "",
-        password : "",
-        emailId : ""
+        name: "",
+        password: "",
+        emailId: ""
     }
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [registerObj, setRegisterObj] = useState(INITIAL_REGISTER_OBJ)
 
-    const submitForm = (e) =>{
+    const submitForm = (e) => {
         e.preventDefault()
         setErrorMessage("")
 
-        if(registerObj.name.trim() === "")return setErrorMessage("Name is required! (use any value)")
-        if(registerObj.emailId.trim() === "")return setErrorMessage("Email Id is required! (use any value)")
-        if(registerObj.password.trim() === "")return setErrorMessage("Password is required! (use any value)")
-        else{
+        if (registerObj.name.trim() === "") return setErrorMessage("Name is required!")
+        if (registerObj.emailId.trim() === "") return setErrorMessage("Email is required!")
+        if (registerObj.password.trim() === "") return setErrorMessage("Password is required!")
+        else {
             setLoading(true)
-            // Call API to check user credentials and save token in localstorage
             localStorage.setItem("token", "DumyTokenHere")
             setLoading(false)
             window.location.href = '/app/dashboard'
         }
     }
 
-    const updateFormValue = ({updateType, value}) => {
+    const updateFormValue = ({ updateType, value }) => {
         setErrorMessage("")
-        setRegisterObj({...registerObj, [updateType] : value})
+        setRegisterObj({ ...registerObj, [updateType]: value })
     }
 
-    return(
-        <div className="min-h-screen bg-base-200 flex items-center">
-            <div className="card mx-auto w-full max-w-5xl  shadow-xl">
-                <div className="grid  md:grid-cols-2 grid-cols-1  bg-base-100 rounded-xl">
-                <div className=''>
-                        <LandingIntro />
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-white">
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 shadow-lg rounded-xl overflow-hidden">
+
+                {/* Kiri: Logo */}
+                <div className="flex items-center justify-center bg-white py-20">
+                    <img src="/Logo1.png" alt="Logo" className="w-90 object-contain" />
                 </div>
-                <div className='py-24 px-10'>
-                    <h2 className='text-2xl font-semibold mb-2 text-center'>Register</h2>
-                    <form onSubmit={(e) => submitForm(e)}>
 
+                {/* Kanan: Form Register */}
+                <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
+                    <h2 className="text-white text-2xl font-semibold text-center mb-8">Register</h2>
+
+                    <form onSubmit={submitForm}>
                         <div className="mb-4">
-
-                            <InputText defaultValue={registerObj.name} updateType="name" containerStyle="mt-4" labelTitle="Name" updateFormValue={updateFormValue}/>
-
-                            <InputText defaultValue={registerObj.emailId} updateType="emailId" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue}/>
-
-                            <InputText defaultValue={registerObj.password} type="password" updateType="password" containerStyle="mt-4" labelTitle="Password" updateFormValue={updateFormValue}/>
-
+                            <label className="text-sm text-white block mb-2">Name</label>
+                            <InputText
+                                defaultValue={registerObj.name}
+                                updateType="name"
+                                updateFormValue={updateFormValue}
+                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                            />
                         </div>
 
-                        <ErrorText styleClass="mt-8">{errorMessage}</ErrorText>
-                        <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Register</button>
+                        <div className="mb-4">
+                            <label className="text-sm text-white block mb-2">Email</label>
+                            <InputText
+                                type="email"
+                                defaultValue={registerObj.emailId}
+                                updateType="emailId"
+                                updateFormValue={updateFormValue}
+                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                            />
+                        </div>
 
-                        <div className='text-center mt-4'>Already have an account? <Link to="/login"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Login</span></Link></div>
+                        <div className="mb-4">
+                            <label className="text-sm text-white block mb-2">Password</label>
+                            <InputText
+                                type="password"
+                                defaultValue={registerObj.password}
+                                updateType="password"
+                                updateFormValue={updateFormValue}
+                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                            />
+                        </div>
+
+                        <ErrorText styleClass="text-white mb-4">{errorMessage}</ErrorText>
+
+                        <button
+                            type="submit"
+                            className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            {loading ? "Registering..." : "Register"}
+                        </button>
+
+                        <div className="text-center text-sm text-white mt-6">
+                            Already have an account?{" "}
+                            <Link to="/login" className="text-orange-400 hover:underline">
+                                Login
+                            </Link>
+                        </div>
                     </form>
                 </div>
-            </div>
             </div>
         </div>
     )
