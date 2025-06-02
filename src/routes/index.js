@@ -19,6 +19,7 @@ const Timesheet = lazy(() => import('../pages/protected/Timesheet'))
 const Finance = lazy(() => import('../pages/protected/Finance'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
 const Meetings = lazy(() => import('../pages/protected/Meetings'))
+const Events = lazy(() => import('../pages/protected/Events'))
 
 
 const routes = [
@@ -27,10 +28,10 @@ const routes = [
     component: Dashboard, // view rendered
   },
  
-  {
-    path: '/leads',
-    component: Leads,
-  },
+  // {
+  //   path: '/leads',
+  //   component: Leads,
+  // },
   {
     path: '/settings-team',
     component: Team,
@@ -98,6 +99,10 @@ const routes = [
   {
     path: '/Meetings',
     component: Meetings,
+  },
+  {
+    path: '/events',
+    component: Events,
   },
 ]
 

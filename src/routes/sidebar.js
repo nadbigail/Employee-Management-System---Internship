@@ -12,11 +12,11 @@ const routes = [
     icon:<LiaBuromobelexperte className={iconClasses} />,  
     name: 'Dashboard',
   },
-  {
-    path: '/app/leads', 
-    icon: <LiaUserTieSolid className={iconClasses} />, 
-    name: 'Leads', 
-  },
+  // {
+  //   path: '/app/leads',
+  //   icon: <LiaUserTieSolid className={iconClasses} />,
+  //   name: 'Leads',
+  // },
   {
     path: '', //no url needed as this has submenu
     icon: <LiaAddressCardSolid className={`${iconClasses} inline` }/>, // icon component
@@ -76,11 +76,11 @@ const routes = [
     icon: <LiaCalendar className={iconClasses}/>,
     name: 'Meetings',
   },
-  {
-    path: '/app/tickets', // url
-    icon: <LiaTicketAltSolid className={iconClasses}/>, // icon component
-    name: 'Tickets', // name that appear in Sidebar
-  },
+  // {
+  //   path: '/app/tickets', // url
+  //   icon: <LiaTicketAltSolid className={iconClasses}/>, // icon component
+  //   name: 'Tickets', // name that appear in Sidebar
+  // },
   {
     path: '/app/events', // url
     icon: <LiaNewspaper className={iconClasses}/>, // icon component

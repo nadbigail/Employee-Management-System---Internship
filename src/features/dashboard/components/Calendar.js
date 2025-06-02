@@ -1,48 +1,77 @@
+import React, {useState, useCallback} from 'react';
 import moment from 'moment';
-import React from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import {Calendar, momentLocalizer} from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
+const initialEvents = [
+  {
+    id: 0,
+    title: 'Task 1',
+    start: new Date(2025, 5, 10),
+    end: new Date(2025, 5, 10),
+    type: 'task',
+  },
+  {
+    id: 1,
+    title: 'Holiday',
+    start: new Date(2025, 5, 12),
+    end: new Date(2025, 5, 12),
+    type: 'holiday',
+  },
+  {
+    id: 2,
+    title: 'Event',
+    start: new Date(2025, 5, 15),
+    end: new Date(2025, 5, 17),
+    type: 'event',
+  }, {
+    id: 3,
+    title: 'Birthday',
+    start: new Date(2025, 5, 23),
+    end: new Date(2025, 5, 23),
+    type: 'birthday',
+  },
+];
+
+
 const MyCalendar = () => {
-  const events = [
-    {
-      id: 0,
-      title: 'Task 1',
-      start: new Date(2023, 9, 1), // October 1, 2023
-      end: new Date(2023, 9, 1),
-      type: 'task',
+  const [myEvents, setMyEvents] = useState(initialEvents);
+
+  const handleSelectSlot = useCallback(
+    ({start, end}) => {
+      const title = window.prompt('New Event name');
+      if (title) {
+        const typeOptions = ['task', 'holiday', 'event', 'ticket', 'leave', 'birthday'];
+        let type = window.prompt(`Event type (${typeOptions.join('/')}):`);
+        if (!typeOptions.includes(type)) {
+          type = 'task';
+        }
+
+        setMyEvents((prev) => [
+          ...prev,
+          {
+            id: prev.length > 0 ? Math.max(...prev.map(e => e.id)) + 1 : 0,
+            start,
+            end,
+            title,
+            type,
+          },
+        ]);
+      }
     },
-    {
-      id: 1,
-      title: 'Holiday',
-      start: new Date(2023, 9, 2), // October 2, 2023
-      end: new Date(2023, 9, 2),
-      type: 'holiday',
+    [setMyEvents]
+  );
+
+  const handleSelectEvent = useCallback(
+    (event) => {
+      if (window.confirm(`Are you sure you want to delete "${event.title}"?`)) {
+        setMyEvents((prev) => prev.filter((ev) => ev.id !== event.id));
+      }
     },
-    {
-      id: 2,
-      title: 'Event',
-      start: new Date(2023, 9, 3), // October 3, 2023
-      end: new Date(2023, 9, 3),
-      type: 'event',
-    },
-    {
-      id: 3,
-      title: 'Ticket',
-      start: new Date(2023, 9, 4), // October 4, 2023
-      end: new Date(2023, 9, 4),
-      type: 'ticket',
-    },
-    {
-      id: 4,
-      title: 'Leave',
-      start: new Date(2023, 9, 5), // October 5, 2023
-      end: new Date(2023, 9, 5),
-      type: 'leave',
-    },
-  ];
+    [setMyEvents]
+  );
 
   const eventStyleGetter = (event) => {
     let backgroundColor;
@@ -62,6 +91,9 @@ const MyCalendar = () => {
       case 'leave':
         backgroundColor = 'purple';
         break;
+      case 'birthday':
+        backgroundColor = 'teal';
+        break;
       default:
         backgroundColor = 'gray';
     }
@@ -77,6 +109,8 @@ const MyCalendar = () => {
     };
   };
 
+  const defaultDate = Date.now()
+
   return (
     <div className="bg-white rounded-xl shadow p-4">
       <div className="border-b pb-2 mb-4">
@@ -85,14 +119,19 @@ const MyCalendar = () => {
       <div className="text-sm text-gray-700">
         <Calendar
           localizer={localizer}
-          events={events}
+          events={myEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 500, width: '100%' }} // Adjust height and width
+          style={{height: 500, width: '100%'}}
           eventPropGetter={eventStyleGetter}
           tooltipAccessor={(event) => `${event.title} - ${event.type}`}
-          views={['month', 'week', 'day', 'agenda']} // Allow switching views
-          defaultView="month" // Set default view
+          views={['month', 'week', 'day', 'agenda']}
+          defaultView="month"
+          defaultDate={defaultDate}
+          className="rbc-calendar"
+          selectable
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
         />
       </div>
     </div>
