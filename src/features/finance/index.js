@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { Search, Filter, Plus, Upload, Download, ChevronDown, X, Edit2, Trash2 } from 'lucide-react';
+import { ChevronDown, Download, Edit2, Filter, Plus, Search, Trash2, Upload, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 const initialExpenses = [
   {
@@ -274,7 +274,7 @@ export default function App() {
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={openAddModal}
-          className="flex items-center space-x-1 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
+          className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm"
         >
           <Plus className="w-4 h-4" />
           <span>Add Expense</span>
@@ -282,7 +282,7 @@ export default function App() {
 
         <button
           onClick={handleImport}
-          className="flex items-center space-x-1 bg-green-500 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm"
+          className="flex items-center space-x-1 bg-red-800 dark:bg-red-600 text-white px-4 py-2 rounded-md text-sm hover:bg-red-600 dark:hover:bg-red-700 transition-colors shadow-sm"
         >
           <Upload className="w-4 h-4" />
           <span>Import</span>
@@ -290,7 +290,7 @@ export default function App() {
 
         <button
           onClick={handleExport}
-          className="flex items-center space-x-1 bg-yellow-500 dark:bg-yellow-600 text-white px-4 py-2 rounded-md text-sm hover:bg-yellow-600 dark:hover:bg-yellow-700 transition-colors shadow-sm"
+          className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm"
         >
           <Download className="w-4 h-4" />
           <span>Export</span>

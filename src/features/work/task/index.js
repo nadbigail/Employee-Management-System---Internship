@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { FiSearch, FiEdit2, FiTrash2, FiPlus, FiDownload, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
+import { useEffect, useMemo, useState } from 'react';
+import { FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiPlus, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
 
 const initialTasksData = [
   {
@@ -211,10 +211,10 @@ const TasksPage = () => {
 
       <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
         <div className="flex flex-col sm:flex-row justify-start items-center mb-3 space-y-2 sm:space-y-0 sm:space-x-3">
-          <button onClick={openModalForCreate} className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+          <button onClick={openModalForCreate} className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm">
             <FiPlus className="mr-2" /> Add Task
           </button>
-          <button onClick={handleExport} className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+          <button onClick={handleExport} className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm">
             <FiDownload className="mr-2" /> Export
           </button>
         </div>

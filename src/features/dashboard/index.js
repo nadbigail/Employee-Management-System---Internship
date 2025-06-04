@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {showNotification} from '../common/headerSlice';
-import WeekTimeLogs from './components/WeekTimelogs';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
 import Calendar from "./components/Calendar";
+import WeekTimeLogs from './components/WeekTimelogs';
 
 const statsData = [
   {

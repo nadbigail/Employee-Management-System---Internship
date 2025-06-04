@@ -1,17 +1,16 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Edit2,
+  Filter as FilterIcon,
   Plus,
   Search,
-  ChevronDown,
-  X,
-  Edit2,
   Trash2,
-  Download,
-  Filter as FilterIcon,
-  Calendar as CalendarIcon,
-  ChevronLeft,
-  ChevronRight
+  X
 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Helper to conditionally apply dark mode classes
 const darkClass = (lightClass, darkVariant) => `${lightClass} ${darkVariant}`;
@@ -550,11 +549,11 @@ export default function EventManagementDashboard() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
-        <button onClick={openAddModal} className="flex items-center space-x-1.5 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 shadow-sm">
+        <button onClick={openAddModal} className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm">
           <Plus className="w-4 h-4" />
           <span>Add Event</span>
         </button>
-        <button onClick={handleExport} className="flex items-center space-x-1.5 bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 shadow-sm">
+        <button onClick={handleExport} className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm">
           <Download className="w-4 h-4" />
           <span>Export</span>
         </button>

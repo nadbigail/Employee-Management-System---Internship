@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Edit2, Trash2, Plus, Download, ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, BarChart2, User, HelpCircle, Table as TableIcon, Settings, Filter, ChevronDown } from 'lucide-react';
+import { BarChart2, Calendar as CalendarIcon, ChevronDown, ChevronLeft, ChevronRight, Download, Edit2, Filter, HelpCircle, Plus, Search, Table as TableIcon, Trash2, User, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Helper to conditionally apply dark mode classes
 const darkClass = (lightClass, darkVariant) => `${lightClass} ${darkVariant}`;
@@ -588,14 +588,14 @@ export default function TimeTrackingDashboard() {
         <div className="flex gap-3">
           <button
             onClick={openCreateLogModal}
-            className="flex items-center space-x-1.5 bg-green-600 text-white px-4 py-1.5 rounded text-sm hover:bg-green-700"
+            className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4"/>
             <span>Log Time</span>
           </button>
           <button
             onClick={handleExport}
-            className="flex items-center space-x-1.5 bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700"
+            className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm"
           >
             <Download className="w-4 h-4"/>
             <span>Export</span>
