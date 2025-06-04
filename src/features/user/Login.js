@@ -85,7 +85,7 @@ function Login() {
             <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden bg-white shadow-2xl">
 
                 {/* Left: Logo */}
-                <div className="bg-white p-12 flex flex-col justify-center min-h-[600px]">
+                <div className="bg-white p-12 flex flex-col justify-center min-h-[700px]">
                     <div className="flex items-center justify-center mb-8">
                         <img src="/Logo1.png" alt="Logo" className="w-80 object-contain" />
                     </div>
@@ -94,7 +94,7 @@ function Login() {
                 {/* Right: Form */}
                 <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
                     <h2 className="text-white text-3xl font-bold mb-2">Welcome back!</h2>
-                    <p className="text-gray-300 text-sm mb-8">Enter your email address to start your journey</p>
+                    <p className="text-gray-300 text-sm mb-4">Enter your email address to start your journey</p>
 
                     <div className="space-y-6">
                         <div>
@@ -147,12 +147,6 @@ function Login() {
                         >
                             {loading ? "Signing in..." : "Login"}
                         </button>
-
-                        <div className="text-center">
-                            <button className="text-sm text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
-                                Sign in with Google
-                            </button>
-                        </div>
 
                         <div className="text-center text-sm text-gray-300 pt-4">
                             Don't have an account? {' '}

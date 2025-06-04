@@ -1,109 +1,148 @@
-import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon'
+import { ArrowLeft, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import InputText from '../../components/Input/InputText'
-import ErrorText from '../../components/Typography/ErrorText'
+
+const InputText = ({ type, defaultValue, updateType, updateFormValue, inputClassName, placeholder }) => {
+    return (
+        <input
+            type={type}
+            defaultValue={defaultValue}
+            placeholder={placeholder}
+            className={inputClassName}
+            onChange={(e) => updateFormValue({ updateType, value: e.target.value })}
+        />
+    )
+}
+
+const ErrorText = ({ styleClass, children }) => {
+    return <div className={styleClass}>{children}</div>
+}
 
 function ForgotPassword() {
-  const INITIAL_USER_OBJ = {
-    emailId: "",
-  }
-
-  const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
-  const [linkSent, setLinkSent] = useState(false)
-  const [userObj, setUserObj] = useState(INITIAL_USER_OBJ)
-
-  const submitForm = (e) => {
-    e.preventDefault()
-    setErrorMessage("")
-
-    if (userObj.emailId.trim() === "") return setErrorMessage("Email is required!")
-    else {
-      setLoading(true)
-      setTimeout(() => {
-        setLoading(false)
-        setLinkSent(true)
-      }, 1000)
+    const INITIAL_USER_OBJ = {
+        emailId: "",
     }
-  }
 
-  const updateFormValue = ({ updateType, value }) => {
-    setErrorMessage("")
-    setUserObj({ ...userObj, [updateType]: value })
-  }
+    const [loading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [linkSent, setLinkSent] = useState(false)
+    const [userObj, setUserObj] = useState(INITIAL_USER_OBJ)
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 shadow-lg rounded-xl overflow-hidden">
+    const submitForm = (e) => {
+        e.preventDefault()
+        setErrorMessage("")
 
-        {/* Kiri: Logo */}
-        <div className="flex items-center justify-center bg-white py-20">
-          <img src="/Logo1.png" alt="Logo" className="w-90 object-contain" />
-        </div>
+        if (userObj.emailId.trim() === "") {
+            return setErrorMessage("Email is required!")
+        }
+        
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(userObj.emailId)) {
+            return setErrorMessage("Please enter a valid email address!")
+        }
 
-        {/* Kanan: Form Forgot Password */}
-        <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
-          <h2 className="text-white text-2xl font-semibold text-center mb-8">Forgot Password</h2>
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+            setLinkSent(true)
+        }, 1000)
+    }
 
-          {linkSent ? (
-            <>
-              <div className="text-center mt-8">
-                <CheckCircleIcon className="inline-block w-32 text-success" />
-              </div>
-              <p className="my-4 text-xl font-bold text-center text-white">Link Sent</p>
-              <p className="mt-4 mb-8 font-semibold text-center text-white">
-                Check your email to reset password
-              </p>
-              <div className="text-center mt-4">
-                <Link to="/login">
-                  <button className="btn btn-block btn-primary">Login</button>
-                </Link>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="my-8 font-semibold text-center text-white">
-                We will send password reset link on your email
-              </p>
+    const updateFormValue = ({ updateType, value }) => {
+        setErrorMessage("")
+        setUserObj({ ...userObj, [updateType]: value })
+    }
 
-              <form onSubmit={submitForm}>
-                <div className="mb-4">
-                  <label className="text-sm text-white block mb-2">Email</label>
-                  <InputText
-                    type="email"
-                    defaultValue={userObj.emailId}
-                    updateType="emailId"
-                    updateFormValue={updateFormValue}
-                    inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
-                  />
+    const handleLogin = () => {
+        window.location.href = '/login'
+    }
+
+    const handleRegister = () => {
+        window.location.href = '/register'
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden bg-white shadow-2xl">
+                
+                {/* Left: Logo */}
+                <div className="bg-white p-12 flex flex-col justify-center min-h-[700px]">
+                    <div className="flex items-center justify-center mb-8">
+                        <img src="/Logo1.png" alt="Logo" className="w-80 object-contain" />
+                    </div>
                 </div>
 
-                <ErrorText styleClass="text-white mb-4">{errorMessage}</ErrorText>
+                {/* Right: Form */}
+                <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[700px] relative">
+                    {/* Back Button */}
+                    <button
+                        onClick={handleLogin}
+                        className="absolute top-6 left-6 text-white hover:text-orange-400 transition-colors p-2 rounded-full hover:bg-white hover:bg-opacity-10"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
+                    {linkSent ? (
+                        <>
+                            <div className="text-center mb-8">
+                                <CheckCircle className="inline-block w-32 h-32 text-green-400 mb-4" />
+                                <h2 className="text-white text-3xl font-bold mb-2">Link Sent</h2>
+                                <p className="text-gray-300 text-sm">
+                                    Check your email to reset password
+                                </p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="text-white text-3xl font-bold mb-2">Forgot Password</h2>
+                            <p className="text-gray-300 text-sm mb-8">
+                                We will send password reset link on your email
+                            </p>
 
-                <button
-                  type="submit"
-                  className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition duration-200 ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={loading}
-                >
-                  {loading ? "Sending..." : "Send Reset Link"}
-                </button>
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="text-sm font-medium text-white block mb-2">Email</label>
+                                    <InputText
+                                        type="email"
+                                        defaultValue={userObj.emailId}
+                                        updateType="emailId"
+                                        updateFormValue={updateFormValue}
+                                        inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all"
+                                        placeholder="Enter your email address"
+                                    />
+                                </div>
 
-                <div className="text-center text-sm text-white mt-6">
-                  Don't have an account yet?{" "}
-                  <Link to="/register" className="text-orange-400 hover:underline">
-                    Register
-                  </Link>
+                                {errorMessage && (
+                                    <ErrorText styleClass="text-red-300 text-sm bg-red-900 bg-opacity-20 p-3 rounded-lg">
+                                        {errorMessage}
+                                    </ErrorText>
+                                )}
+
+                                <button
+                                    onClick={submitForm}
+                                    disabled={loading}
+                                    className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 ${
+                                        loading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                                    }`}
+                                >
+                                    {loading ? "Sending..." : "Send Reset Link"}
+                                </button>
+
+                                <div className="text-center text-sm text-gray-300 pt-4">
+                                    Don't have an account yet?{" "}
+                                    <button
+                                        onClick={handleRegister}
+                                        className="text-orange-400 hover:text-orange-300 font-medium transition-colors bg-transparent border-none cursor-pointer"
+                                    >
+                                        Register
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
-              </form>
-            </>
-          )}
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default ForgotPassword
