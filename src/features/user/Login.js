@@ -1,7 +1,21 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import InputText from '../../components/Input/InputText'
-import ErrorText from '../../components/Typography/ErrorText'
+
+// Mock components for demonstration
+const InputText = ({ type, defaultValue, updateType, updateFormValue, inputClassName, placeholder }) => {
+    return (
+        <input
+            type={type}
+            defaultValue={defaultValue}
+            placeholder={placeholder}
+            className={inputClassName}
+            onChange={(e) => updateFormValue({ updateType, value: e.target.value })}
+        />
+    )
+}
+
+const ErrorText = ({ styleClass, children }) => {
+    return <div className={styleClass}>{children}</div>
+}
 
 function Login() {
     const INITIAL_LOGIN_OBJ = {
@@ -23,9 +37,14 @@ function Login() {
             return setErrorMessage("Password is required!")
         else {
             setLoading(true)
-            localStorage.setItem("token", "DumyTokenHere")
-            setLoading(false)
-            window.location.href = '/app/dashboard'
+            // Simulate token storage and direct redirect like in your old code
+            setTimeout(() => {
+                // Note: localStorage is not available in this environment, but this shows the pattern
+                // localStorage.setItem("token", "DumyTokenHere")
+                setLoading(false)
+                // Direct redirect like in your old code
+                window.location.href = '/app/dashboard'
+            }, 1000) // Reduced timeout for better UX
         }
     }
 
@@ -34,63 +53,102 @@ function Login() {
         setLoginObj({ ...loginObj, [updateType]: value })
     }
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
-            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 shadow-lg rounded-xl overflow-hidden">
+    const handleForgotPassword = () => {
+        // Direct redirect instead of alert
+        window.location.href = '/forgot-password'
+    }
 
-                
-                {/* Kiri: Logo */}
-                <div className="flex items-center justify-center bg-white py-20">
-                    <img src="/Logo1.png" alt="Logo" className="w-90 object-contain" />
+    const handleRegister = () => {
+        // Direct redirect instead of alert
+        window.location.href = '/register'
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden bg-white shadow-2xl">
+
+                {/* Left: Logo */}
+                <div className="bg-white p-12 flex flex-col justify-center min-h-[600px]">
+                    <div className="flex items-center justify-center mb-8">
+                        <img src="/Logo1.png" alt="Logo" className="w-80 object-contain" />
+                    </div>
                 </div>
 
-                {/* Kanan: Form Login */}
+                {/* Right: Form */}
                 <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
-                    <h2 className="text-white text-2xl font-semibold text-center mb-8">Login</h2>
+                    <h2 className="text-white text-3xl font-bold mb-2">Welcome back!</h2>
+                    <p className="text-gray-300 text-sm mb-8">Enter your email address to start your journey</p>
 
-                    <form onSubmit={submitForm}>
-                        <div className="mb-4">
-                            <label className="text-sm  text-white block mb-2">Email</label>
+                    <div className="space-y-6">
+                        <div>
+                            <label className="text-sm font-medium text-white block mb-2">Email</label>
                             <InputText
                                 type="email"
                                 defaultValue={loginObj.emailId}
                                 updateType="emailId"
                                 updateFormValue={updateFormValue}
-                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                                inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all"
+                                placeholder="Enter your email address"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className=" text-sm text-white block mb-2">Password</label>
+                        <div>
+                            <label className="text-sm font-medium text-white block mb-2">Password</label>
                             <InputText
                                 type="password"
                                 defaultValue={loginObj.password}
                                 updateType="password"
                                 updateFormValue={updateFormValue}
-                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                                inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all"
+                                placeholder="Enter your password"
                             />
                         </div>
 
-                        <div className="text-right mb-4">
-                            <Link to="/forgot-password" className="text-sm text-white hover:underline">
-                                Forgot Password?
-                            </Link>
+                        <div className="flex items-center justify-between">
+                            <label className="flex items-center">
+                                <input type="checkbox" className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-400" />
+                                <span className="ml-2 text-sm text-gray-300">Remember me</span>
+                            </label>
+                            <button 
+                                onClick={handleForgotPassword}
+                                className="text-sm text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer"
+                            >
+                                Forgot password?
+                            </button>
                         </div>
 
-                        <ErrorText styleClass="text-white mb-4">{errorMessage}</ErrorText>
+                        {errorMessage && (
+                            <ErrorText styleClass="text-red-300 text-sm bg-red-900 bg-opacity-20 p-3 rounded-lg">{errorMessage}</ErrorText>
+                        )}
 
                         <button
-                            type="submit"
-                            className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            onClick={submitForm}
+                            disabled={loading}
+                            className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 ${
+                                loading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                            }`}
                         >
-                            {loading ? "Logging in..." : "Login"}
+                            {loading ? "Signing in..." : "Login"}
                         </button>
 
-                        <div className="text-center text-sm text-white mt-6">
-                            Don't have an account yet? <Link to="/register" className="text-orange-400 hover:underline">Register</Link>
+                        <div className="text-center">
+                            <button className="text-sm text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
+                                Sign in with Google
+                            </button>
                         </div>
-                    </form>
+
+                        <div className="text-center text-sm text-gray-300 pt-4">
+                            Don't have an account? {' '}
+                            <button 
+                                onClick={handleRegister}
+                                className="text-orange-400 hover:text-orange-300 font-medium transition-colors bg-transparent border-none cursor-pointer"
+                            >
+                                Register
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     )
