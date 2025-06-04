@@ -1,98 +1,149 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import InputText from '../../components/Input/InputText'
-import ErrorText from '../../components/Typography/ErrorText'
+import { Link, useNavigate } from 'react-router-dom'
 
-function Register() {
-    const INITIAL_REGISTER_OBJ = {
-        name: "",
+const InputText = ({ type, defaultValue, updateType, updateFormValue, inputClassName, placeholder }) => {
+    return (
+        <input
+            type={type}
+            defaultValue={defaultValue}
+            placeholder={placeholder}
+            className={inputClassName}
+            onChange={(e) => updateFormValue({ updateType, value: e.target.value })}
+        />
+    )
+}
+
+const ErrorText = ({ styleClass, children }) => {
+    return <div className={styleClass}>{children}</div>
+}
+
+function Login() {
+    const INITIAL_LOGIN_OBJ = {
         password: "",
         emailId: ""
     }
 
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-    const [registerObj, setRegisterObj] = useState(INITIAL_REGISTER_OBJ)
+    const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ)
 
     const submitForm = (e) => {
         e.preventDefault()
         setErrorMessage("")
 
-        if (registerObj.name.trim() === "") return setErrorMessage("Name is required!")
-        if (registerObj.emailId.trim() === "") return setErrorMessage("Email is required!")
-        if (registerObj.password.trim() === "") return setErrorMessage("Password is required!")
-        else {
-            setLoading(true)
+        if (loginObj.emailId.trim() === "")
+            return setErrorMessage("Email is required!")
+        if (loginObj.password.trim() === "")
+            return setErrorMessage("Password is required!")
+
+        const validEmail = "admin@example.com"
+        const validPassword = "SecureDemo2024!"
+
+        if (loginObj.emailId !== validEmail)
+            return setErrorMessage("Invalid email! Use: admin@example.com")
+
+        if (loginObj.password !== validPassword)
+            return setErrorMessage("Invalid password! Use: SecureDemo2024!")
+
+        setLoading(true)
+        setTimeout(() => {
             localStorage.setItem("token", "DumyTokenHere")
             setLoading(false)
-            window.location.href = '/app/dashboard'
-        }
+            navigate('/app/dashboard')
+        }, 1000)
     }
 
     const updateFormValue = ({ updateType, value }) => {
         setErrorMessage("")
-        setRegisterObj({ ...registerObj, [updateType]: value })
+        setLoginObj({ ...loginObj, [updateType]: value })
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
-            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 shadow-lg rounded-xl overflow-hidden">
-
-                {/* Kiri: Logo */}
-                <div className="flex items-center justify-center bg-white py-20">
-                    <img src="/Logo1.png" alt="Logo" className="w-90 object-contain" />
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden bg-white shadow-2xl">
+                {/* Left: Logo */}
+                <div className="bg-white p-12 flex flex-col justify-center min-h-[600px]">
+                    <div className="flex items-center justify-center mb-8">
+                        <img src="/Logo1.png" alt="Logo" className="w-80 object-contain" />
+                    </div>
                 </div>
 
-                {/* Kanan: Form Register */}
+                {/* Right: Form */}
                 <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
-                    <h2 className="text-white text-2xl font-semibold text-center mb-8">Register</h2>
+                    <h2 className="text-white text-3xl font-bold mb-2">Welcome back!</h2>
+                    <p className="text-gray-300 text-sm mb-4">Enter your email address to start your journey</p>
+                    <div className="bg-blue-900 bg-opacity-30 p-3 rounded-lg mb-6">
+                        <p className="text-blue-200 text-xs font-medium">Demo Credentials:</p>
+                        <p className="text-blue-100 text-xs">Email: admin@example.com</p>
+                        <p className="text-blue-100 text-xs">Password: SecureDemo2024!</p>
+                    </div>
 
-                    <form onSubmit={submitForm}>
-                        <div className="mb-4">
-                            <label className="text-sm text-white block mb-2">Name</label>
-                            <InputText
-                                defaultValue={registerObj.name}
-                                updateType="name"
-                                updateFormValue={updateFormValue}
-                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="text-sm text-white block mb-2">Email</label>
+                    <form onSubmit={submitForm} className="space-y-6">
+                        <div>
+                            <label className="text-sm font-medium text-white block mb-2">Email</label>
                             <InputText
                                 type="email"
-                                defaultValue={registerObj.emailId}
+                                defaultValue={loginObj.emailId}
                                 updateType="emailId"
                                 updateFormValue={updateFormValue}
-                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                                inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all"
+                                placeholder="Enter your email address"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className="text-sm text-white block mb-2">Password</label>
+                        <div>
+                            <label className="text-sm font-medium text-white block mb-2">Password</label>
                             <InputText
                                 type="password"
-                                defaultValue={registerObj.password}
+                                defaultValue={loginObj.password}
                                 updateType="password"
                                 updateFormValue={updateFormValue}
-                                inputClassName="rounded-full px-4 py-2 w-full bg-gray-200"
+                                inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all"
+                                placeholder="Enter your password"
                             />
                         </div>
 
-                        <ErrorText styleClass="text-white mb-4">{errorMessage}</ErrorText>
+                        <div className="flex items-center justify-between">
+                            <label className="flex items-center">
+                                <input type="checkbox" className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-400" />
+                                <span className="ml-2 text-sm text-gray-300">Remember me</span>
+                            </label>
+                            <Link 
+                                to="/forgot-password"
+                                className="text-sm text-gray-300 hover:text-white transition-colors"
+                            >
+                                Forgot password?
+                            </Link>
+                        </div>
+
+                        {errorMessage && (
+                            <ErrorText styleClass="text-red-300 text-sm bg-red-900 bg-opacity-20 p-3 rounded-lg">{errorMessage}</ErrorText>
+                        )}
 
                         <button
                             type="submit"
-                            className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={loading}
+                            className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 ${
+                                loading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                            }`}
                         >
-                            {loading ? "Registering..." : "Register"}
+                            {loading ? "Signing in..." : "Login"}
                         </button>
 
-                        <div className="text-center text-sm text-white mt-6">
-                            Already have an account?{" "}
-                            <Link to="/login" className="text-orange-400 hover:underline">
-                                Login
+                        <div className="text-center">
+                            <button className="text-sm text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
+                                Sign in with Google
+                            </button>
+                        </div>
+
+                        <div className="text-center text-sm text-gray-300 pt-4">
+                            Don't have an account?{" "}
+                            <Link
+                                to="/register"
+                                className="text-orange-400 hover:text-orange-300 font-medium transition-colors"
+                            >
+                                Register
                             </Link>
                         </div>
                     </form>
@@ -102,4 +153,4 @@ function Register() {
     )
 }
 
-export default Register
+export default Login

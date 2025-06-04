@@ -35,17 +35,34 @@ function Login() {
             return setErrorMessage("Email is required!")
         if (loginObj.password.trim() === "")
             return setErrorMessage("Password is required!")
-        else {
-            setLoading(true)
-            // Simulate token storage and direct redirect like in your old code
-            setTimeout(() => {
-                // Note: localStorage is not available in this environment, but this shows the pattern
-                // localStorage.setItem("token", "DumyTokenHere")
-                setLoading(false)
-                // Direct redirect like in your old code
-                window.location.href = '/app/dashboard'
-            }, 1000) // Reduced timeout for better UX
+        
+        // Dummy login validation
+        const validEmail = "admin@example.com"
+        const validPassword = "SecureDemo2024!"
+        
+        if (loginObj.emailId !== validEmail) {
+            return setErrorMessage("Invalid email! Use: admin@example.com")
         }
+        
+        if (loginObj.password !== validPassword) {
+            return setErrorMessage("Invalid password! Use: SecureDemo2024!")
+        }
+        
+        // Login successful
+        setLoading(true)
+        setTimeout(() => {
+            // Set token in localStorage (this is what your checkAuth function likely checks)
+            try {
+                localStorage.setItem("token", "DumyTokenHere")
+                // Force page reload to trigger auth check, or use React Router navigation
+                window.location.href = '/app/dashboard'
+            } catch (error) {
+                // Fallback if localStorage is not available (like in artifact environment)
+                console.log('Login successful - would redirect to dashboard')
+                alert('Login successful! In your real app, this will redirect to /app/dashboard')
+            }
+            setLoading(false)
+        }, 1000)
     }
 
     const updateFormValue = ({ updateType, value }) => {
