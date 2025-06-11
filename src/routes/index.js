@@ -24,14 +24,10 @@ const Events = lazy(() => import('../pages/protected/Events'))
 
 const routes = [
   {
-    path: '/dashboard', // the url
-    component: Dashboard, // view rendered
+    path: '/dashboard', 
+    component: Dashboard, 
   },
- 
-  // {
-  //   path: '/leads',
-  //   component: Leads,
-  // },
+  
   {
     path: '/settings-team',
     component: Team,

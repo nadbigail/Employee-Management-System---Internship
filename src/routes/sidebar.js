@@ -1,6 +1,6 @@
 /** Icons are imported separatly to reduce build time */
 
-import { LiaAddressCardSolid, LiaBriefcaseSolid, LiaBuromobelexperte, LiaBusinessTimeSolid, LiaCalendar, LiaCalendarCheck, LiaChalkboardSolid, LiaClipboardListSolid, LiaCommentsSolid, LiaDoorOpenSolid, LiaMedalSolid, LiaMoneyCheckAltSolid, LiaNewspaper, LiaPlaneDepartureSolid, LiaTicketAltSolid, LiaToolsSolid, LiaUserTieSolid } from "react-icons/lia";
+import { LiaAddressCardSolid, LiaBriefcaseSolid, LiaBuromobelexperte, LiaBusinessTimeSolid, LiaCalendar, LiaCalendarCheck, LiaChalkboardSolid, LiaClipboardListSolid, LiaCommentsSolid, LiaDoorOpenSolid, LiaMedalSolid, LiaMoneyCheckAltSolid, LiaNewspaper, LiaPlaneDepartureSolid, LiaToolsSolid } from "react-icons/lia";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
