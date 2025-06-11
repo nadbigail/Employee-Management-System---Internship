@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import { FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiPlus, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
+import React, {useState, useMemo, useEffect} from 'react';
+import {FiSearch, FiEdit2, FiTrash2, FiPlus, FiDownload, FiChevronLeft, FiChevronRight, FiX} from 'react-icons/fi';
+import {useSelector} from "react-redux";
 
 const initialTasksData = [
   {
@@ -69,9 +70,13 @@ const ASSIGNEES = ['Eunike', 'Sara', 'Nadine', 'Jane', 'John', 'Alex', 'Maria'];
 
 
 const TasksPage = () => {
+  const {role} = useSelector(state => state.user);
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem('tasksData');
-    return savedTasks ? JSON.parse(savedTasks) : initialTasksData.map(task => ({...task, id: task.id || crypto.randomUUID()}));
+    return savedTasks ? JSON.parse(savedTasks) : initialTasksData.map(task => ({
+      ...task,
+      id: task.id || crypto.randomUUID()
+    }));
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -99,8 +104,8 @@ const TasksPage = () => {
   }, [tasks]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {name, value} = e.target;
+    setFormData(prev => ({...prev, [name]: value}));
   };
 
   const resetFormData = () => {
@@ -120,16 +125,16 @@ const TasksPage = () => {
 
   const openModalForEdit = (task) => {
     setEditingTask(task);
-    setFormData({ ...task });
+    setFormData({...task});
     setShowModal(true);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (editingTask) {
-      setTasks(tasks.map(t => t.id === editingTask.id ? { ...t, ...formData } : t));
+      setTasks(tasks.map(t => t.id === editingTask.id ? {...t, ...formData} : t));
     } else {
-      setTasks([{ ...formData, id: crypto.randomUUID() }, ...tasks]);
+      setTasks([{...formData, id: crypto.randomUUID()}, ...tasks]);
     }
     setShowModal(false);
     setEditingTask(null);
@@ -171,53 +176,68 @@ const TasksPage = () => {
       <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded shadow">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div className="relative">
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search Tasks</label>
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-0.5 w-5 h-5 text-gray-400 dark:text-gray-500 mt-2" />
+            <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search
+              Tasks</label>
+            <FiSearch
+              className="absolute left-3 top-1/2 transform -translate-y-0.5 w-5 h-5 text-gray-400 dark:text-gray-500 mt-2"/>
             <input
               type="text"
               id="search"
               placeholder="Search by task, code, assignee..."
               className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
           <div>
-            <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+            <label htmlFor="statusFilter"
+                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
             <select
               id="statusFilter"
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="All">All Statuses</option>
               {TASK_STATUSES.map(status => <option key={status} value={status}>{status}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="assigneeFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assigned To</label>
+            <label htmlFor="assigneeFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assigned
+              To</label>
             <select
               id="assigneeFilter"
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={assigneeFilter}
-              onChange={(e) => { setAssigneeFilter(e.target.value); setCurrentPage(1);}}
+              onChange={(e) => {
+                setAssigneeFilter(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="All">All Assignees</option>
-              {[...new Set(tasks.map(task => task.assignedTo).concat(ASSIGNEES))].sort().map(assignee => <option key={assignee} value={assignee}>{assignee}</option>)}
+              {[...new Set(tasks.map(task => task.assignedTo).concat(ASSIGNEES))].sort().map(assignee => <option
+                key={assignee} value={assignee}>{assignee}</option>)}
             </select>
           </div>
         </div>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-        <div className="flex flex-col sm:flex-row justify-start items-center mb-3 space-y-2 sm:space-y-0 sm:space-x-3">
-          <button onClick={openModalForCreate} className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm">
-            <FiPlus className="mr-2" /> Add Task
-          </button>
-          <button onClick={handleExport} className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm">
-            <FiDownload className="mr-2" /> Export
-          </button>
-        </div>
+        {role === 'admin' &&
+          <div
+            className="flex flex-col sm:flex-row justify-start items-center mb-3 space-y-2 sm:space-y-0 sm:space-x-3">
+            <button onClick={openModalForCreate}
+                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+              <FiPlus className="mr-2"/> Add Task
+            </button>
+          </div>
+        }
 
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm table-auto">
@@ -250,12 +270,19 @@ const TasksPage = () => {
                         {task.status}
                       </span>
                 </td>
-                <td className="px-4 py-2 border-b dark:border-gray-600 whitespace-nowrap">
-                  <div className="flex items-center space-x-2">
-                    <button onClick={() => openModalForEdit(task)} className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1" title="Edit Task"><FiEdit2 size={16} /></button>
-                    <button onClick={() => handleDeleteTask(task.id)} className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1" title="Delete Task"><FiTrash2 size={16} /></button>
-                  </div>
-                </td>
+                {role === 'admin' &&
+                  <td className="px-4 py-2 border-b dark:border-gray-600 whitespace-nowrap">
+                    <div className="flex items-center space-x-2">
+                      <button onClick={() => openModalForEdit(task)}
+                              className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1"
+                              title="Edit Task"><FiEdit2 size={16}/></button>
+                      <button onClick={() => handleDeleteTask(task.id)}
+                              className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
+                              title="Delete Task">
+                        <FiTrash2 size={16}/></button>
+                    </div>
+                  </td>
+                }
               </tr>
             )) : (
               <tr>
@@ -295,64 +322,96 @@ const TasksPage = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 transform transition-all duration-300 ease-in-out scale-100">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
+          <div
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 transform transition-all duration-300 ease-in-out scale-100">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
                 {editingTask ? 'Edit Task' : 'Add New Task'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                <FiX size={24} />
+              <button onClick={() => setShowModal(false)}
+                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <FiX size={24}/>
               </button>
             </div>
             <form onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2">
                 <div>
-                  <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
-                  <input type="text" name="code" id="code" value={formData.code} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="code"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
+                  <input type="text" name="code" id="code" value={formData.code} onChange={handleInputChange} required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="task" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task Description</label>
-                  <input type="text" name="task" id="task" value={formData.task} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="task" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task
+                    Description</label>
+                  <input type="text" name="task" id="task" value={formData.task} onChange={handleInputChange} required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assigned To</label>
-                  <select name="assignedTo" id="assignedTo" value={formData.assignedTo} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
+                  <label htmlFor="assignedTo"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assigned To</label>
+                  <select name="assignedTo" id="assignedTo" value={formData.assignedTo} onChange={handleInputChange}
+                          required
+                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
                     {ASSIGNEES.map(a => <option key={a} value={a}>{a}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                  <select name="status" id="status" value={formData.status} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
+                  <label htmlFor="status"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                  <select name="status" id="status" value={formData.status} onChange={handleInputChange} required
+                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
                     {TASK_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
-                  <input type="date" name="startDate" id="startDate" value={formData.startDate} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="startDate"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
+                  <input type="date" name="startDate" id="startDate" value={formData.startDate}
+                         onChange={handleInputChange} required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Due Date</label>
-                  <input type="date" name="dueDate" id="dueDate" value={formData.dueDate} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Due
+                    Date</label>
+                  <input type="date" name="dueDate" id="dueDate" value={formData.dueDate} onChange={handleInputChange}
+                         required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="estimatedTime" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Estimated Time (e.g., 8h)</label>
-                  <input type="text" name="estimatedTime" id="estimatedTime" value={formData.estimatedTime} onChange={handleInputChange} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="estimatedTime"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Estimated Time
+                    (e.g., 8h)</label>
+                  <input type="text" name="estimatedTime" id="estimatedTime" value={formData.estimatedTime}
+                         onChange={handleInputChange}
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="hoursLogged" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hours Logged (e.g., 7.5h)</label>
-                  <input type="text" name="hoursLogged" id="hoursLogged" value={formData.hoursLogged} onChange={handleInputChange} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="hoursLogged"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hours Logged (e.g.,
+                    7.5h)</label>
+                  <input type="text" name="hoursLogged" id="hoursLogged" value={formData.hoursLogged}
+                         onChange={handleInputChange}
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="completedOn" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Completed On</label>
-                  <input type="date" name="completedOn" id="completedOn" value={formData.completedOn} onChange={handleInputChange} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="completedOn"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Completed
+                    On</label>
+                  <input type="date" name="completedOn" id="completedOn" value={formData.completedOn}
+                         onChange={handleInputChange}
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
               </div>
               <div className="mt-6 flex justify-end space-x-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 border border-gray-300 dark:border-gray-500 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <button type="button" onClick={() => setShowModal(false)}
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-500 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
+                <button type="submit"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
                   {editingTask ? 'Save Changes' : 'Add Task'}
                 </button>
               </div>

@@ -1,5 +1,23 @@
-import { BarChart2, Calendar as CalendarIcon, ChevronDown, ChevronLeft, ChevronRight, Download, Edit2, Filter, HelpCircle, Plus, Search, Table as TableIcon, Trash2, User, X } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, {useState, useMemo, useEffect, useRef} from 'react';
+import {
+  Search,
+  Edit2,
+  Trash2,
+  Plus,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Calendar as CalendarIcon,
+  BarChart2,
+  User,
+  HelpCircle,
+  Table as TableIcon,
+  Settings,
+  Filter,
+  ChevronDown
+} from 'lucide-react';
+import {useSelector} from "react-redux";
 
 // Helper to conditionally apply dark mode classes
 const darkClass = (lightClass, darkVariant) => `${lightClass} ${darkVariant}`;
@@ -42,6 +60,7 @@ const TASK_CODES_LIST = ['TSK001', 'TSK002', 'TSK003', 'TSK004', 'TSK005', 'GEN0
 
 
 export default function TimeTrackingDashboard() {
+  const {role} = useSelector(state => state.user)
   const [timeEntries, setTimeEntries] = useState(() => {
     const savedEntries = localStorage.getItem('timeTrackingEntries');
     return savedEntries ? JSON.parse(savedEntries) : initialTimeEntries.map(entry => ({
@@ -585,22 +604,17 @@ export default function TimeTrackingDashboard() {
 
 
       <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-3">
-          <button
-            onClick={openCreateLogModal}
-            className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm"
-          >
-            <Plus className="w-4 h-4"/>
-            <span>Log Time</span>
-          </button>
-          <button
-            onClick={handleExport}
-            className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm"
-          >
-            <Download className="w-4 h-4"/>
-            <span>Export</span>
-          </button>
-        </div>
+        {role === 'admin' &&
+          <div className="flex gap-3">
+            <button
+              onClick={openCreateLogModal}
+              className="flex items-center space-x-1.5 bg-green-600 text-white px-4 py-1.5 rounded text-sm hover:bg-green-700"
+            >
+              <Plus className="w-4 h-4"/>
+              <span>Log Time</span>
+            </button>
+          </div>
+        }
         <div className={darkClass("flex border rounded overflow-hidden", "border-gray-300 dark:border-gray-600")}>
           {[{Icon: TableIcon, active: true, name: 'Table'}, {Icon: CalendarIcon, name: 'Calendar'}, {
             Icon: BarChart2,
@@ -637,7 +651,9 @@ export default function TimeTrackingDashboard() {
               <th className={darkClass("px-4 py-3 border-b", "dark:border-gray-600")}>Start Time</th>
               <th className={darkClass("px-4 py-3 border-b", "dark:border-gray-600")}>End Time</th>
               <th className={darkClass("px-4 py-3 border-b", "dark:border-gray-600")}>Total Hours</th>
-              <th className={darkClass("px-4 py-3 border-b", "dark:border-gray-600")}>Action</th>
+              {role === 'admin' &&
+                <th className={darkClass("px-4 py-3 border-b", "dark:border-gray-600")}>Action</th>
+              }
             </tr>
             </thead>
             <tbody className={darkClass("divide-y", "divide-gray-200 dark:divide-gray-700")}>
@@ -658,16 +674,20 @@ export default function TimeTrackingDashboard() {
                 <td
                   className={darkClass("px-4 py-2 border-b", "dark:border-gray-600")}>{item.endTime ? new Date(item.endTime).toLocaleString() : '-'}</td>
                 <td className={darkClass("px-4 py-2 border-b", "dark:border-gray-600")}>{item.hours}</td>
-                <td className={darkClass("px-4 py-2 border-b", "dark:border-gray-600")}>
-                  <div className="flex items-center space-x-2">
-                    <button onClick={() => openEditLogModal(item)}
-                            className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1" title="Edit Log">
-                      <Edit2 size={16}/></button>
-                    <button onClick={() => handleDeleteLog(item.id)}
-                            className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1" title="Delete Log">
-                      <Trash2 size={16}/></button>
-                  </div>
-                </td>
+                {role === 'admin' &&
+                  <td className={darkClass("px-4 py-2 border-b", "dark:border-gray-600")}>
+                    <div className="flex items-center space-x-2">
+                      <button onClick={() => openEditLogModal(item)}
+                              className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1"
+                              title="Edit Log">
+                        <Edit2 size={16}/></button>
+                      <button onClick={() => handleDeleteLog(item.id)}
+                              className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
+                              title="Delete Log">
+                        <Trash2 size={16}/></button>
+                    </div>
+                  </td>
+                }
               </tr>
             )) : (
               <tr>

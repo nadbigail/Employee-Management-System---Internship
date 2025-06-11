@@ -3,9 +3,7 @@ import { lazy } from 'react'
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
-const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
-const Calendar = lazy(() => import('../pages/protected/Calendar'))
 const Team = lazy(() => import('../pages/protected/Team'))
 const Transactions = lazy(() => import('../pages/protected/Transactions'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
@@ -20,14 +18,17 @@ const Finance = lazy(() => import('../pages/protected/Finance'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
 const Meetings = lazy(() => import('../pages/protected/Meetings'))
 const Events = lazy(() => import('../pages/protected/Events'))
-
+const Appreciations = lazy(() => import('../pages/protected/Appreciation'))
+const Leaves = lazy(() => import('../pages/protected/Leaves'))
+const Attendance = lazy(() => import('../pages/protected/Attendance'))
+const Calendar = lazy(() => import('../pages/protected/Calendar'))
 
 const routes = [
   {
-    path: '/dashboard', 
-    component: Dashboard, 
+    path: '/dashboard', // the url
+    component: Dashboard, // view rendered
   },
-  
+
   {
     path: '/settings-team',
     component: Team,
@@ -75,6 +76,18 @@ const routes = [
   {
     path: '/blank',
     component: Blank,
+  },
+  {
+    path: '/hr-appreciation',
+    component: Appreciations
+  },
+  {
+    path: '/hr-leaves',
+    component: Leaves,
+  },
+  {
+    path: '/hr-attendance',
+    component: Attendance
   },
   {
     path: '/work-projects',

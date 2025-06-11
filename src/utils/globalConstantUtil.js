@@ -4,6 +4,9 @@ module.exports = Object.freeze({
         USER_DETAIL : "USER_DETAIL",
         LEAD_ADD_NEW : "LEAD_ADD_NEW",
         CONFIRMATION : "CONFIRMATION",
+        EVENT_ADD_NEW: "EVENT_ADD_NEW",
+        ATTENDANCE_ADD_NEW: "ATTENDANCE_ADD_NEW",
+        LEAVE_ADD_NEW: "LEAVE_ADD_NEW",
         DEFAULT : "",
     },
 

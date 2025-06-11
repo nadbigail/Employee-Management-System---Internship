@@ -1,5 +1,6 @@
-import { ChevronLeft, ChevronRight, Download, Edit2, Plus, Search, Trash2, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
+import {Search, Edit2, Trash2, Plus, Download, ChevronLeft, ChevronRight, X} from 'lucide-react';
+import {useSelector} from "react-redux";
 
 const initialProjectsData = [
   {
@@ -55,15 +56,17 @@ const initialProjectsData = [
 ];
 
 const PROJECT_STATUSES = ['Pending', 'Ongoing', 'Completed', 'On Hold', 'Cancelled'];
-// Clients can be dynamic based on data or a predefined list
-// For this example, we'll derive them dynamically and also have a base list
 const INITIAL_CLIENTS = ['Acme Corp', 'Beta Ltd', 'Gamma Inc', 'Delta Co', 'Omega LLC', 'New Client Inc'];
 
 
 const ProjectsPage = () => {
+  const {role} = useSelector(state => state.user);
   const [projects, setProjects] = useState(() => {
     const savedProjects = localStorage.getItem('projectsData');
-    return savedProjects ? JSON.parse(savedProjects) : initialProjectsData.map(project => ({...project, id: project.id || crypto.randomUUID()}));
+    return savedProjects ? JSON.parse(savedProjects) : initialProjectsData.map(project => ({
+      ...project,
+      id: project.id || crypto.randomUUID()
+    }));
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -94,8 +97,8 @@ const ProjectsPage = () => {
   }, [projects]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {name, value} = e.target;
+    setFormData(prev => ({...prev, [name]: value}));
   };
 
   const resetFormData = () => {
@@ -115,16 +118,16 @@ const ProjectsPage = () => {
 
   const openModalForEdit = (project) => {
     setEditingProject(project);
-    setFormData({ ...project });
+    setFormData({...project});
     setShowModal(true);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (editingProject) {
-      setProjects(projects.map(p => p.id === editingProject.id ? { ...p, ...formData } : p));
+      setProjects(projects.map(p => p.id === editingProject.id ? {...p, ...formData} : p));
     } else {
-      setProjects([{ ...formData, id: crypto.randomUUID() }, ...projects]);
+      setProjects([{...formData, id: crypto.randomUUID()}, ...projects]);
     }
     setShowModal(false);
     setEditingProject(null);
@@ -167,36 +170,49 @@ const ProjectsPage = () => {
       <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded shadow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
           <div className="relative">
-            <label htmlFor="searchProject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search Projects</label>
-            <Search className="absolute left-3 top-1/2 transform -translate-y-0.5 w-5 h-5 text-gray-400 dark:text-gray-500 mt-2" />
+            <label htmlFor="searchProject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search
+              Projects</label>
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-0.5 w-5 h-5 text-gray-400 dark:text-gray-500 mt-2"/>
             <input
               type="text"
               id="searchProject"
               placeholder="Search by name, code, client, members..."
               className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
           <div>
-            <label htmlFor="projectStatusFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+            <label htmlFor="projectStatusFilter"
+                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
             <select
               id="projectStatusFilter"
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="All">All Statuses</option>
               {PROJECT_STATUSES.map(status => <option key={status} value={status}>{status}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="clientFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client</label>
+            <label htmlFor="clientFilter"
+                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client</label>
             <select
               id="clientFilter"
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100"
               value={clientFilter}
-              onChange={(e) => { setClientFilter(e.target.value); setCurrentPage(1);}}
+              onChange={(e) => {
+                setClientFilter(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="All">All Clients</option>
               {availableClients.map(client => <option key={client} value={client}>{client}</option>)}
@@ -206,14 +222,15 @@ const ProjectsPage = () => {
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-        <div className="flex flex-col sm:flex-row justify-start items-center mb-3 space-y-2 sm:space-y-0 sm:space-x-3">
-          <button onClick={openModalForCreate} className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm">
-            <Plus className="mr-2" /> Add Project
-          </button>
-          <button onClick={handleExport} className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm">
-            <Download className="mr-2" /> Export
-          </button>
-        </div>
+        {role === 'admin' &&
+          <div
+            className="flex flex-col sm:flex-row justify-start items-center mb-3 space-y-2 sm:space-y-0 sm:space-x-3">
+            <button onClick={openModalForCreate}
+                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+              <Plus className="mr-2"/> Add Project
+            </button>
+          </div>
+        }
 
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm table-auto">
@@ -239,17 +256,23 @@ const ProjectsPage = () => {
                          project.status === 'Ongoing' ? 'bg-blue-100 dark:bg-blue-700 text-blue-800 dark:text-blue-100' :
                            project.status === 'Pending' ? 'bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-100' :
                              project.status === 'On Hold' ? 'bg-orange-100 dark:bg-orange-700 text-orange-800 dark:text-orange-100' :
-                               'bg-red-100 dark:bg-red-700 text-red-800 dark:text-red-100' // Cancelled or other
+                               'bg-red-100 dark:bg-red-700 text-red-800 dark:text-red-100'
                      }`}>
                         {project.status}
                       </span>
                 </td>
-                <td className="px-4 py-2 border-b dark:border-gray-600 whitespace-nowrap">
-                  <div className="flex items-center space-x-2">
-                    <button onClick={() => openModalForEdit(project)} className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1" title="Edit Project"><Edit2 size={16} /></button>
-                    <button onClick={() => handleDeleteProject(project.id)} className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1" title="Delete Project"><Trash2 size={16} /></button>
-                  </div>
-                </td>
+                {role === 'admin' &&
+                  <td className="px-4 py-2 border-b dark:border-gray-600 whitespace-nowrap">
+                    <div className="flex items-center space-x-2">
+                      <button onClick={() => openModalForEdit(project)}
+                              className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 p-1"
+                              title="Edit Project"><Edit2 size={16}/></button>
+                      <button onClick={() => handleDeleteProject(project.id)}
+                              className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
+                              title="Delete Project"><Trash2 size={16}/></button>
+                    </div>
+                  </td>
+                }
               </tr>
             )) : (
               <tr>
@@ -289,32 +312,48 @@ const ProjectsPage = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 transform transition-all duration-300 ease-in-out scale-100">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
+          <div
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 transform transition-all duration-300 ease-in-out scale-100">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
                 {editingProject ? 'Edit Project' : 'Add New Project'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                <X size={24} />
+              <button onClick={() => setShowModal(false)}
+                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <X size={24}/>
               </button>
             </div>
             <form onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2">
                 <div>
-                  <label htmlFor="projectCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
-                  <input type="text" name="code" id="projectCode" value={formData.code} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="projectCode"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
+                  <input type="text" name="code" id="projectCode" value={formData.code} onChange={handleInputChange}
+                         required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="projectName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Name</label>
-                  <input type="text" name="name" id="projectName" value={formData.name} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="projectName"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project
+                    Name</label>
+                  <input type="text" name="name" id="projectName" value={formData.name} onChange={handleInputChange}
+                         required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="projectMembers" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Members (comma-separated)</label>
-                  <input type="text" name="members" id="projectMembers" value={formData.members} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="projectMembers"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Members
+                    (comma-separated)</label>
+                  <input type="text" name="members" id="projectMembers" value={formData.members}
+                         onChange={handleInputChange}
+                         required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="projectClient" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client</label>
+                  <label htmlFor="projectClient"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client</label>
                   <select
                     name="client"
                     id="projectClient"
@@ -328,34 +367,48 @@ const ProjectsPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="projectStatus" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                  <select name="status" id="projectStatus" value={formData.status} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
+                  <label htmlFor="projectStatus"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                  <select name="status" id="projectStatus" value={formData.status} onChange={handleInputChange} required
+                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
                     {PROJECT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="projectStartDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
-                  <input type="date" name="startDate" id="projectStartDate" value={formData.startDate} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="projectStartDate"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start
+                    Date</label>
+                  <input type="date" name="startDate" id="projectStartDate" value={formData.startDate}
+                         onChange={handleInputChange} required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                  <label htmlFor="projectDeadline" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Deadline</label>
-                  <input type="date" name="deadline" id="projectDeadline" value={formData.deadline} onChange={handleInputChange} required className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100" />
+                  <label htmlFor="projectDeadline"
+                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Deadline</label>
+                  <input type="date" name="deadline" id="projectDeadline" value={formData.deadline}
+                         onChange={handleInputChange}
+                         required
+                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
               </div>
               <div className="mt-6 flex justify-end space-x-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 border border-gray-300 dark:border-gray-500 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <button type="button" onClick={() => setShowModal(false)}
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-500 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
+                <button type="submit"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
                   {editingProject ? 'Save Changes' : 'Add Project'}
                 </button>
               </div>
             </form>
           </div>
         </div>
-      )}
+      )
+      }
     </div>
-  );
+  )
+    ;
 };
 
 export default ProjectsPage;

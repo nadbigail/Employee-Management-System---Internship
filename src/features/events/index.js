@@ -1,16 +1,18 @@
+import React, {useState, useMemo, useEffect, useRef} from 'react';
 import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  Edit2,
-  Filter as FilterIcon,
   Plus,
   Search,
+  ChevronDown,
+  X,
+  Edit2,
   Trash2,
-  X
+  Download,
+  Filter as FilterIcon,
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {useSelector} from "react-redux";
 
 // Helper to conditionally apply dark mode classes
 const darkClass = (lightClass, darkVariant) => `${lightClass} ${darkVariant}`;
@@ -74,9 +76,10 @@ const initialEvents = [
 ];
 
 const EVENT_STATUS_OPTIONS = ['Upcoming', 'Ongoing', 'Completed', 'Cancelled', 'Postponed'];
-const EVENT_CATEGORY_OPTIONS = ['Company Wide', 'Departmental', 'Workshop', 'Seminar', 'Product Launch', 'Social', 'CSR Activity', 'Meeting'];
+const EVENT_CATEGORY_OPTIONS = ['Company Wide', 'Departmental', 'Workshop', 'Seminar', 'Product Launch', 'Social', 'CSR Activity', 'Meeting', 'Holiday'];
 
 export default function EventManagementDashboard() {
+  const {role} = useSelector(state => state.user);
   const [events, setEvents] = useState(initialEvents.map(e => ({...e, id: e.id || crypto.randomUUID()})));
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
@@ -129,6 +132,7 @@ export default function EventManagementDashboard() {
         setShowCalendar(false);
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -163,10 +167,10 @@ export default function EventManagementDashboard() {
     };
 
     if (editingEvent) {
-      setEvents(events.map(ev => ev.id === editingEvent.id ? { ...ev, ...eventData } : ev));
+      setEvents(events.map(ev => ev.id === editingEvent.id ? {...ev, ...eventData} : ev));
       alert('Event updated successfully!');
     } else {
-      setEvents(prevEvents => [{ id: crypto.randomUUID(), ...eventData }, ...prevEvents]);
+      setEvents(prevEvents => [{id: crypto.randomUUID(), ...eventData}, ...prevEvents]);
       alert('Event added successfully!');
     }
     resetFormFields();
@@ -199,7 +203,6 @@ export default function EventManagementDashboard() {
     }
   };
 
-  const handleExport = () => console.log('Exporting events...', filteredEvents);
 
   const parseEventDate = (dateStr) => {
     if (!dateStr) return null;
@@ -222,10 +225,10 @@ export default function EventManagementDashboard() {
 
     if (duration !== 'All Time' && duration !== 'Custom Range') {
       const now = new Date();
-      now.setHours(0,0,0,0); // Normalize to start of day for comparisons
+      now.setHours(0, 0, 0, 0); // Normalize to start of day for comparisons
       let startDateRange = new Date(now);
       let endDateRange = new Date(now);
-      endDateRange.setHours(23,59,59,999);
+      endDateRange.setHours(23, 59, 59, 999);
 
 
       switch (duration) {
@@ -238,21 +241,21 @@ export default function EventManagementDashboard() {
           startDateRange = new Date(now.setDate(now.getDate() + diffToMonday));
           endDateRange = new Date(startDateRange);
           endDateRange.setDate(startDateRange.getDate() + 6);
-          endDateRange.setHours(23,59,59,999);
+          endDateRange.setHours(23, 59, 59, 999);
           break;
         case 'This Month':
           startDateRange = new Date(now.getFullYear(), now.getMonth(), 1);
-          endDateRange = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23,59,59,999);
+          endDateRange = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
           break;
         case 'Next 7 Days':
           endDateRange = new Date(now);
           endDateRange.setDate(now.getDate() + 6);
-          endDateRange.setHours(23,59,59,999);
+          endDateRange.setHours(23, 59, 59, 999);
           break;
         case 'Next 30 Days':
           endDateRange = new Date(now);
           endDateRange.setDate(now.getDate() + 29);
-          endDateRange.setHours(23,59,59,999);
+          endDateRange.setHours(23, 59, 59, 999);
           break;
       }
       tempEvents = tempEvents.filter(event => {
@@ -412,25 +415,31 @@ export default function EventManagementDashboard() {
     return (
       <div className="w-full">
         <div className="flex justify-between items-center mb-2 px-1">
-          <button onClick={() => handleMonthNav('prev')} className={darkClass("p-1 rounded hover:bg-gray-200", "dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300")}>
-            <ChevronLeft className="w-5 h-5" />
+          <button onClick={() => handleMonthNav('prev')}
+                  className={darkClass("p-1 rounded hover:bg-gray-200", "dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300")}>
+            <ChevronLeft className="w-5 h-5"/>
           </button>
           <div className="flex items-center space-x-1">
-            <select value={month} onChange={(e) => isStartCalendar ? setCalendarStartMonth(parseInt(e.target.value)) : setCalendarEndMonth(parseInt(e.target.value))}
+            <select value={month}
+                    onChange={(e) => isStartCalendar ? setCalendarStartMonth(parseInt(e.target.value)) : setCalendarEndMonth(parseInt(e.target.value))}
                     className={darkClass("border rounded px-2 py-1 text-sm", "bg-white dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600")}>
               {monthNames.map((m, idx) => <option key={idx} value={idx}>{m}</option>)}
             </select>
-            <select value={year} onChange={(e) => isStartCalendar ? setCalendarStartYear(parseInt(e.target.value)) : setCalendarEndYear(parseInt(e.target.value))}
+            <select value={year}
+                    onChange={(e) => isStartCalendar ? setCalendarStartYear(parseInt(e.target.value)) : setCalendarEndYear(parseInt(e.target.value))}
                     className={darkClass("border rounded px-2 py-1 text-sm", "bg-white dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600")}>
-              {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i).map(y => <option key={y} value={y}>{y}</option>)}
+              {Array.from({length: 10}, (_, i) => new Date().getFullYear() - 5 + i).map(y => <option key={y}
+                                                                                                     value={y}>{y}</option>)}
             </select>
           </div>
-          <button onClick={() => handleMonthNav('next')} className={darkClass("p-1 rounded hover:bg-gray-200", "dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300")}>
-            <ChevronRight className="w-5 h-5" />
+          <button onClick={() => handleMonthNav('next')}
+                  className={darkClass("p-1 rounded hover:bg-gray-200", "dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300")}>
+            <ChevronRight className="w-5 h-5"/>
           </button>
         </div>
         <div className="grid grid-cols-7 gap-1 text-xs">
-          {dayNames.map(day => <div key={day} className={darkClass("text-center font-medium text-gray-500", "dark:text-gray-400")}>{day}</div>)}
+          {dayNames.map(day => <div key={day}
+                                    className={darkClass("text-center font-medium text-gray-500", "dark:text-gray-400")}>{day}</div>)}
           {days}
         </div>
       </div>
@@ -439,8 +448,10 @@ export default function EventManagementDashboard() {
 
 
   return (
-    <div className={darkClass("px-4 sm:px-8 py-6 bg-gray-100 min-h-screen", "dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans")}>
-      <div className={darkClass("flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow-sm mb-6", "dark:bg-gray-800")}>
+    <div
+      className={darkClass("px-4 sm:px-8 py-6 bg-gray-100 min-h-screen", "dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans")}>
+      <div
+        className={darkClass("flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow-sm mb-6", "dark:bg-gray-800")}>
         {/* Date Range Filter */}
         <div className="flex items-center space-x-2 relative" ref={durationDropdownRef}>
           <span className={darkClass("text-sm font-medium text-gray-600", "dark:text-gray-300")}>Date Range</span>
@@ -450,10 +461,11 @@ export default function EventManagementDashboard() {
             className={darkClass("border rounded-full px-3 py-1.5 text-sm w-56 text-left truncate flex items-center justify-between", "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600")}
           >
             <span>{duration}</span>
-            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
           </button>
           {durationDropdownOpen && !showCalendar && (
-            <div className={darkClass("absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
+            <div
+              className={darkClass("absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
               {durationOptions.map((option) => (
                 <div
                   key={option}
@@ -467,20 +479,28 @@ export default function EventManagementDashboard() {
             </div>
           )}
           {showCalendar && (
-            <div ref={calendarRef} className={darkClass("absolute top-full left-0 mt-1 bg-white rounded-lg shadow-xl z-20 p-4 border", "dark:bg-gray-800 dark:border-gray-700")} style={{ width: '640px' }}>
+            <div ref={calendarRef}
+                 className={darkClass("absolute top-full left-0 mt-1 bg-white rounded-lg shadow-xl z-20 p-4 border", "dark:bg-gray-800 dark:border-gray-700")}
+                 style={{width: '640px'}}>
               <div className="grid grid-cols-2 gap-6">
                 {renderCalendarMonth(calendarStartYear, calendarStartMonth, true)}
                 {renderCalendarMonth(calendarEndYear, calendarEndMonth, false)}
               </div>
-              <div className={darkClass("mt-4 pt-3 border-t flex justify-between items-center", "dark:border-gray-700")}>
+              <div
+                className={darkClass("mt-4 pt-3 border-t flex justify-between items-center", "dark:border-gray-700")}>
                 <div className={darkClass("text-xs text-gray-600", "dark:text-gray-300")}>
                   {selectedCalendarStartDate && selectedCalendarEndDate ? `${formatDateForDisplay(selectedCalendarStartDate)} To ${formatDateForDisplay(selectedCalendarEndDate)}`
                     : selectedCalendarStartDate ? `${formatDateForDisplay(selectedCalendarStartDate)} - Select end date`
                       : 'Select a date range'}
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={handleCancelDateRange} className={darkClass("px-3 py-1 border rounded text-sm", "text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700")}>Cancel</button>
-                  <button onClick={handleApplyDateRange} className={`px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 ${(!selectedCalendarStartDate || !selectedCalendarEndDate) ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={!selectedCalendarStartDate || !selectedCalendarEndDate}>Apply</button>
+                  <button onClick={handleCancelDateRange}
+                          className={darkClass("px-3 py-1 border rounded text-sm", "text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700")}>Cancel
+                  </button>
+                  <button onClick={handleApplyDateRange}
+                          className={`px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 ${(!selectedCalendarStartDate || !selectedCalendarEndDate) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          disabled={!selectedCalendarStartDate || !selectedCalendarEndDate}>Apply
+                  </button>
                 </div>
               </div>
             </div>
@@ -495,12 +515,17 @@ export default function EventManagementDashboard() {
           <button onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
                   className={darkClass("border rounded-full px-3 py-1.5 text-sm min-w-[120px] text-left flex items-center justify-between", "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600")}>
             <span>{statusFilter}</span>
-            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
           </button>
           {statusDropdownOpen && (
-            <div className={darkClass("absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
+            <div
+              className={darkClass("absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
               {['All', ...EVENT_STATUS_OPTIONS].map(option => (
-                <div key={option} onClick={() => { setStatusFilter(option); setStatusDropdownOpen(false); setCurrentPage(1); }}
+                <div key={option} onClick={() => {
+                  setStatusFilter(option);
+                  setStatusDropdownOpen(false);
+                  setCurrentPage(1);
+                }}
                      className={darkClass(`px-4 py-2 cursor-pointer text-sm hover:bg-gray-100 ${statusFilter === option ? 'bg-blue-500 text-white hover:bg-blue-600' : 'text-gray-700'}`, `dark:hover:bg-gray-600 ${statusFilter === option ? 'dark:text-white' : 'dark:text-gray-200'}`)}>
                   {option}
                 </div>
@@ -517,12 +542,17 @@ export default function EventManagementDashboard() {
           <button onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                   className={darkClass("border rounded-full px-3 py-1.5 text-sm min-w-[150px] text-left flex items-center justify-between", "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600")}>
             <span>{categoryFilter}</span>
-            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
           </button>
           {categoryDropdownOpen && (
-            <div className={darkClass("absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
+            <div
+              className={darkClass("absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg z-10 border", "dark:bg-gray-700 dark:border-gray-600")}>
               {['All', ...EVENT_CATEGORY_OPTIONS].map(option => (
-                <div key={option} onClick={() => { setCategoryFilter(option); setCategoryDropdownOpen(false); setCurrentPage(1);}}
+                <div key={option} onClick={() => {
+                  setCategoryFilter(option);
+                  setCategoryDropdownOpen(false);
+                  setCurrentPage(1);
+                }}
                      className={darkClass(`px-4 py-2 cursor-pointer text-sm hover:bg-gray-100 ${categoryFilter === option ? 'bg-blue-500 text-white hover:bg-blue-600' : 'text-gray-700'}`, `dark:hover:bg-gray-600 ${categoryFilter === option ? 'dark:text-white' : 'dark:text-gray-200'}`)}>
                   {option}
                 </div>
@@ -535,56 +565,73 @@ export default function EventManagementDashboard() {
 
         {/* Search Input */}
         <div className="relative flex-grow">
-          <Search className={darkClass("absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400", "dark:text-gray-500")} />
-          <input type="text" placeholder="Search events..." value={searchQuery} onChange={(e) => {setSearchQuery(e.target.value); setCurrentPage(1);}}
-                 className={darkClass("pl-10 pr-4 py-2 w-full rounded-full bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500", "dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:border-blue-500")} />
+          <Search
+            className={darkClass("absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400", "dark:text-gray-500")}/>
+          <input type="text" placeholder="Search events..." value={searchQuery} onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+                 className={darkClass("pl-10 pr-4 py-2 w-full rounded-full bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500", "dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 dark:focus:border-blue-500")}/>
         </div>
 
         <div className="h-8 w-px bg-gray-300 dark:bg-gray-600 hidden sm:block"></div>
 
-        <button className={darkClass("flex items-center space-x-2 rounded-lg px-3 py-1.5 text-sm border hover:bg-gray-100", "text-gray-600 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700")}>
-          <FilterIcon className="w-4 h-4" />
+        <button
+          className={darkClass("flex items-center space-x-2 rounded-lg px-3 py-1.5 text-sm border hover:bg-gray-100", "text-gray-600 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700")}>
+          <FilterIcon className="w-4 h-4"/>
           <span>Filters</span>
         </button>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
-        <button onClick={openAddModal} className="flex items-center space-x-1 bg-blue-800 dark:bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors shadow-sm">
-          <Plus className="w-4 h-4" />
-          <span>Add Event</span>
-        </button>
-        <button onClick={handleExport} className="flex items-center space-x-1 bg-green-800 dark:bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-sm">
-          <Download className="w-4 h-4" />
-          <span>Export</span>
-        </button>
+        {role === 'admin' &&
+          <button onClick={openAddModal}
+                  className="flex items-center space-x-1.5 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 shadow-sm">
+            <Plus className="w-4 h-4"/>
+            <span>Add Event</span>
+          </button>
+        }
       </div>
 
       <div className={darkClass("bg-white rounded-md shadow overflow-hidden", "dark:bg-gray-800")}>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm table-auto">
             <thead className={darkClass("bg-gray-50", "dark:bg-gray-700")}>
-            <tr className={darkClass("text-left text-xs font-medium text-gray-500 uppercase tracking-wider", "dark:text-gray-300")}>
-              <th className="py-3 px-4"><input type="checkbox" className={darkClass("rounded border-gray-300 text-blue-600 focus:ring-blue-500", "dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-offset-gray-800")} /></th>
+            <tr
+              className={darkClass("text-left text-xs font-medium text-gray-500 uppercase tracking-wider", "dark:text-gray-300")}>
+              <th className="py-3 px-4"><input type="checkbox"
+                                               className={darkClass("rounded border-gray-300 text-blue-600 focus:ring-blue-500", "dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-offset-gray-800")}/>
+              </th>
               <th className="py-3 px-4">Event Name</th>
               <th className="py-3 px-4">Date & Time</th>
               <th className="py-3 px-4">Location</th>
               <th className="py-3 px-4">Category</th>
               <th className="py-3 px-4">Status</th>
               <th className="py-3 px-4">Attendees</th>
-              <th className="py-3 px-4">Action</th>
+              {role === 'admin' &&
+                <th className="py-3 px-4">Action</th>
+              }
             </tr>
             </thead>
             <tbody className={darkClass("divide-y", "divide-gray-200 dark:divide-gray-700")}>
             {currentEntries.length === 0 ? (
-              <tr><td colSpan="8" className="text-center py-10 text-gray-500 dark:text-gray-400">No events found.</td></tr>
+              <tr>
+                <td colSpan="8" className="text-center py-10 text-gray-500 dark:text-gray-400">No events found.</td>
+              </tr>
             ) : (
               currentEntries.map(event => (
                 <tr key={event.id} className={darkClass("hover:bg-gray-50", "dark:hover:bg-gray-700/50")}>
-                  <td className="py-3 px-4"><input type="checkbox" className={darkClass("rounded border-gray-300 text-blue-600 focus:ring-blue-500", "dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-offset-gray-800")} /></td>
-                  <td className={darkClass("py-3 px-4 whitespace-nowrap font-medium text-gray-900", "dark:text-gray-100")}>{event.eventName}</td>
-                  <td className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.eventDate} at {event.eventTime}</td>
-                  <td className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.location}</td>
-                  <td className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.category}</td>
+                  <td className="py-3 px-4"><input type="checkbox"
+                                                   className={darkClass("rounded border-gray-300 text-blue-600 focus:ring-blue-500", "dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-offset-gray-800")}/>
+                  </td>
+                  <td
+                    className={darkClass("py-3 px-4 whitespace-nowrap font-medium text-gray-900", "dark:text-gray-100")}>{event.eventName}</td>
+                  <td
+                    className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.eventDate} at {event.eventTime}</td>
+                  <td
+                    className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.location}</td>
+                  <td
+                    className={darkClass("py-3 px-4 whitespace-nowrap text-gray-600", "dark:text-gray-300")}>{event.category}</td>
                   <td className="py-3 px-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                         ${event.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100' :
@@ -595,13 +642,20 @@ export default function EventManagementDashboard() {
                         {event.status}
                       </span>
                   </td>
-                  <td className={darkClass("py-3 px-4 text-gray-600 max-w-xs truncate", "dark:text-gray-300")} title={event.attendees.join(', ')}>{event.attendees.join(', ')}</td>
-                  <td className="py-3 px-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center space-x-2">
-                      <button onClick={() => openEditModal(event)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title="Edit Event"><Edit2 size={18} /></button>
-                      <button onClick={() => handleDeleteEvent(event.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" title="Delete Event"><Trash2 size={18} /></button>
-                    </div>
-                  </td>
+                  <td className={darkClass("py-3 px-4 text-gray-600 max-w-xs truncate", "dark:text-gray-300")}
+                      title={event.attendees.join(', ')}>{event.attendees.join(', ')}</td>
+                  {role === 'admin' && (
+                    <td className="py-3 px-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center space-x-2">
+                        <button onClick={() => openEditModal(event)}
+                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                title="Edit Event"><Edit2 size={18}/></button>
+                        <button onClick={() => handleDeleteEvent(event.id)}
+                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                title="Delete Event"><Trash2 size={18}/></button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
@@ -609,22 +663,31 @@ export default function EventManagementDashboard() {
           </table>
         </div>
         {filteredEvents.length > 0 && (
-          <div className={darkClass("flex flex-col sm:flex-row items-center justify-between p-4 text-sm border-t", "dark:border-gray-700")}>
+          <div
+            className={darkClass("flex flex-col sm:flex-row items-center justify-between p-4 text-sm border-t", "dark:border-gray-700")}>
             <div className={darkClass("flex items-center space-x-2 mb-2 sm:mb-0 text-gray-600", "dark:text-gray-400")}>
               <span>Show</span>
               <div className="relative inline-block">
-                <select value={entriesPerPage} onChange={(e) => {setEntriesPerPage(Number(e.target.value)); setCurrentPage(1);}}
+                <select value={entriesPerPage} onChange={(e) => {
+                  setEntriesPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
                         className={darkClass("appearance-none border rounded px-3 py-1.5 pr-8 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500", "dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600")}>
                   {[10, 25, 50].map(size => <option key={size} value={size}>{size}</option>)}
                 </select>
-                <ChevronDown className={darkClass("pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700", "dark:text-gray-400")} />
+                <ChevronDown
+                  className={darkClass("pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700", "dark:text-gray-400")}/>
               </div>
               <span>entries</span>
             </div>
             <div className={darkClass("flex items-center space-x-1 text-gray-600", "dark:text-gray-400")}>
               <span>Showing {Math.min(indexOfFirstEntry + 1, filteredEvents.length)} to {Math.min(indexOfLastEntry, filteredEvents.length)} of {filteredEvents.length} entries</span>
-              <button onClick={handlePreviousPage} disabled={currentPage === 1} className={darkClass("px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50", "dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200")}>Previous</button>
-              <button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0} className={darkClass("px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50", "dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200")}>Next</button>
+              <button onClick={handlePreviousPage} disabled={currentPage === 1}
+                      className={darkClass("px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50", "dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200")}>Previous
+              </button>
+              <button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0}
+                      className={darkClass("px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50", "dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200")}>Next
+              </button>
             </div>
           </div>
         )}
@@ -632,56 +695,82 @@ export default function EventManagementDashboard() {
 
       {showAddEventModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30 p-4">
-          <div className={darkClass("bg-white rounded-lg shadow-xl w-full max-w-lg p-6 transform transition-all", "dark:bg-gray-800")}>
+          <div
+            className={darkClass("bg-white rounded-lg shadow-xl w-full max-w-lg p-6 transform transition-all", "dark:bg-gray-800")}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className={darkClass("text-xl font-semibold text-gray-800", "dark:text-gray-100")}>{editingEvent ? 'Edit Event' : 'Add New Event'}</h3>
-              <button onClick={() => { setShowAddEventModal(false); setEditingEvent(null); resetFormFields();}} className={darkClass("text-gray-500 hover:text-gray-700", "dark:text-gray-400 dark:hover:text-gray-200")}><X className="w-5 h-5" /></button>
+              <h3
+                className={darkClass("text-xl font-semibold text-gray-800", "dark:text-gray-100")}>{editingEvent ? 'Edit Event' : 'Add New Event'}</h3>
+              <button onClick={() => {
+                setShowAddEventModal(false);
+                setEditingEvent(null);
+                resetFormFields();
+              }}
+                      className={darkClass("text-gray-500 hover:text-gray-700", "dark:text-gray-400 dark:hover:text-gray-200")}>
+                <X className="w-5 h-5"/></button>
             </div>
             <form onSubmit={handleSaveEvent}>
               <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
                 <div>
-                  <label htmlFor="eventName" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Event Name</label>
-                  <input type="text" id="eventName" value={newEventName} onChange={(e) => setNewEventName(e.target.value)} required
-                         className={darkClass("w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500")} />
+                  <label htmlFor="eventName"
+                         className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Event
+                    Name</label>
+                  <input type="text" id="eventName" value={newEventName}
+                         onChange={(e) => setNewEventName(e.target.value)} required
+                         className={darkClass("w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500")}/>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="eventDate" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Date</label>
-                    <input type="date" id="eventDate" value={newEventDate} onChange={(e) => setNewEventDate(e.target.value)} required
-                           className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")} />
+                    <label htmlFor="eventDate"
+                           className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Date</label>
+                    <input type="date" id="eventDate" value={newEventDate}
+                           onChange={(e) => setNewEventDate(e.target.value)} required
+                           className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}/>
                   </div>
                   <div>
-                    <label htmlFor="eventTime" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Time</label>
-                    <input type="time" id="eventTime" value={newEventTime} onChange={(e) => setNewEventTime(e.target.value)} required
-                           className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")} />
+                    <label htmlFor="eventTime"
+                           className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Time</label>
+                    <input type="time" id="eventTime" value={newEventTime}
+                           onChange={(e) => setNewEventTime(e.target.value)} required
+                           className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}/>
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="eventLocation" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Location</label>
-                  <input type="text" id="eventLocation" value={newEventLocation} onChange={(e) => setNewEventLocation(e.target.value)} required
-                         className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")} />
+                  <label htmlFor="eventLocation"
+                         className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Location</label>
+                  <input type="text" id="eventLocation" value={newEventLocation}
+                         onChange={(e) => setNewEventLocation(e.target.value)} required
+                         className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}/>
                 </div>
                 <div>
-                  <label htmlFor="eventDescription" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Description</label>
-                  <textarea id="eventDescription" value={newEventDescription} onChange={(e) => setNewEventDescription(e.target.value)} rows="3"
+                  <label htmlFor="eventDescription"
+                         className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Description</label>
+                  <textarea id="eventDescription" value={newEventDescription}
+                            onChange={(e) => setNewEventDescription(e.target.value)} rows="3"
                             className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}></textarea>
                 </div>
                 <div>
-                  <label htmlFor="eventAttendees" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Attendees (comma-separated)</label>
-                  <input type="text" id="eventAttendees" value={newEventAttendees} onChange={(e) => setNewEventAttendees(e.target.value)}
-                         className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")} />
+                  <label htmlFor="eventAttendees"
+                         className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Attendees
+                    (comma-separated)</label>
+                  <input type="text" id="eventAttendees" value={newEventAttendees}
+                         onChange={(e) => setNewEventAttendees(e.target.value)}
+                         className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}/>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="eventStatus" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Status</label>
-                    <select id="eventStatus" value={newEventStatus} onChange={(e) => setNewEventStatus(e.target.value)} required
+                    <label htmlFor="eventStatus"
+                           className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Status</label>
+                    <select id="eventStatus" value={newEventStatus} onChange={(e) => setNewEventStatus(e.target.value)}
+                            required
                             className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}>
                       {EVENT_STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="eventCategory" className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Category</label>
-                    <select id="eventCategory" value={newEventCategory} onChange={(e) => setNewEventCategory(e.target.value)} required
+                    <label htmlFor="eventCategory"
+                           className={darkClass("block text-sm font-medium text-gray-700 mb-1", "dark:text-gray-300")}>Category</label>
+                    <select id="eventCategory" value={newEventCategory}
+                            onChange={(e) => setNewEventCategory(e.target.value)} required
                             className={darkClass("w-full p-2 border rounded-md shadow-sm", "border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100")}>
                       {EVENT_CATEGORY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                     </select>
@@ -689,9 +778,15 @@ export default function EventManagementDashboard() {
                 </div>
               </div>
               <div className="mt-6 flex justify-end space-x-3">
-                <button type="button" onClick={() => { setShowAddEventModal(false); setEditingEvent(null); resetFormFields();}}
-                        className={darkClass("px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50", "border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700")}>Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
+                <button type="button" onClick={() => {
+                  setShowAddEventModal(false);
+                  setEditingEvent(null);
+                  resetFormFields();
+                }}
+                        className={darkClass("px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50", "border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700")}>Cancel
+                </button>
+                <button type="submit"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
                   {editingEvent ? 'Save Changes' : 'Add Event'}
                 </button>
               </div>

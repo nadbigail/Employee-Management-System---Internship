@@ -8,32 +8,69 @@ const localizer = momentLocalizer(moment);
 const initialEvents = [
   {
     id: 0,
-    title: 'Task 1',
+    title: 'Submit monthly report',
     start: new Date(2025, 5, 10),
     end: new Date(2025, 5, 10),
     type: 'task',
   },
   {
     id: 1,
-    title: 'Holiday',
+    title: 'National Holiday',
     start: new Date(2025, 5, 12),
     end: new Date(2025, 5, 12),
     type: 'holiday',
   },
   {
     id: 2,
-    title: 'Event',
+    title: 'Company wide gathering',
     start: new Date(2025, 5, 15),
     end: new Date(2025, 5, 17),
     type: 'event',
-  }, {
+  },
+  {
     id: 3,
-    title: 'Birthday',
+    title: "John Doe's Birthday",
     start: new Date(2025, 5, 23),
     end: new Date(2025, 5, 23),
     type: 'birthday',
   },
+  {
+    id: 4,
+    title: 'Review project proposal',
+    start: new Date(2025, 5, 5),
+    end: new Date(2025, 5, 5),
+    type: 'task',
+  },
+  {
+    id: 5,
+    title: "Jane Smith's Birthday",
+    start: new Date(2025, 6, 1),
+    end: new Date(2025, 6, 1),
+    type: 'birthday',
+  },
+  {
+    id: 6,
+    title: 'Rafi Dirgantara – Organized a successful internal workshop on AI tools',
+    start: new Date(2025, 4, 8),
+    end: new Date(2025, 4, 8),
+    type: 'appreciation',
+  },
+  {
+    id: 7,
+    title: 'Felicia Anggraini – Completed system migration 3 days ahead of schedule',
+    start: new Date(2025, 4, 10),
+    end: new Date(2025, 4, 10),
+    type: 'appreciation',
+  },
+  {
+    id: 8,
+    title: 'Kevin Hartanto – Praised by client for fast response on the ABC project',
+    start: new Date(2025, 4, 12),
+    end: new Date(2025, 4, 12),
+    type: 'appreciation',
+  },
 ];
+
 
 
 const MyCalendar = () => {
