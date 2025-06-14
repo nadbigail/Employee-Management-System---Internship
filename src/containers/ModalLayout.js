@@ -7,6 +7,8 @@ import ConfirmationModalBody from '../features/common/components/ConfirmationMod
 import AddEventModalBody from "../features/calendar/AddEventModalBody";
 import AddAttendanceModal from "../features/hr/attendance/AddAttendanceModal";
 import AddLeaveModalBody from "../features/hr/leaves/AddLeaveModalBody";
+import ManageRegistrationModal from "../features/hr/registration/ManageRegistModal";
+import ConfirmationModal from "../features/hr/leaves/Confirmationmodal";
 
 
 function ModalLayout() {
@@ -39,6 +41,8 @@ function ModalLayout() {
               [MODAL_BODY_TYPES.EVENT_ADD_NEW]: <AddEventModalBody closeModal={close} extraObject={extraObject}/>,
               [MODAL_BODY_TYPES.ATTENDANCE_ADD_NEW] : <AddAttendanceModal extraObject={extraObject} closeModal={close} />,
               [MODAL_BODY_TYPES.LEAVE_ADD_NEW]: <AddLeaveModalBody closeModal={close} extraObject={extraObject} />,
+              [MODAL_BODY_TYPES.MANAGE_REGISTRATION] : <ManageRegistrationModal extraObject={extraObject} closeModal={close} />,
+              [MODAL_BODY_TYPES.LEAVE_REQUEST_CONFIRMATION]: <ConfirmationModal extraObject={extraObject} closeModal={close} />,
               [MODAL_BODY_TYPES.DEFAULT]: <div></div>
             }[bodyType]
           }

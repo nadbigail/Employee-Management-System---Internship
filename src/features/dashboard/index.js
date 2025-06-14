@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { showNotification } from '../common/headerSlice';
 import Calendar from "./components/Calendar";
 import WeekTimeLogs from './components/WeekTimelogs';
@@ -30,7 +30,7 @@ const statsData = [
 ];
 
 function Dashboard() {
-
+  const name = localStorage.getItem('name');
   const dispatch = useDispatch();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isClockedIn, setIsClockedIn] = useState(false);
@@ -44,19 +44,15 @@ function Dashboard() {
   }, []);
 
   const updateDashboardPeriod = (newRange) => {
-    // Dashboard range changed, write code to refresh your values
-    // Pesan notifikasi akan ditangani oleh headerSlice
     dispatch(showNotification({message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status: 1}));
   }
 
   return (
-    // Wrapper utama dashboard, asumsikan parent mengatur bg-gray-100 dark:bg-gray-900
-    // Jadi, konten di sini mulai dengan padding dan default text colors.
     <div className="text-gray-800 dark:text-gray-100">
 
       {/* Top Bar */}
       <div className="bg-gray-100 dark:bg-slate-800 px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
-        <div className="text-gray-700 dark:text-gray-200 text-[20px]">Welcome, Jane Doe</div>
+        <div className="text-gray-700 dark:text-gray-200 text-[20px]">Welcome, {name}</div>
 
         <div className="flex items-center gap-4 mt-3 sm:mt-0">
           <div className="text-right">

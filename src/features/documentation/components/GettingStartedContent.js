@@ -157,7 +157,7 @@ function GettingStartedContent(){
               <ul className='mt-0'>
                     <li>App.js - Main file containing different routes and components </li>
                     <li>index.css - Additional global css if required</li>
-                    <li>index.js - Entry point of project</li>
+                    <li>index.jsx - Entry point of project</li>
                     <li>package.json - All dependencies and npm scripts</li>
                     <li>tailwind.config.js - Tailwind CSS configuration file, add theme customization and new themes in this file</li>
                 </ul>

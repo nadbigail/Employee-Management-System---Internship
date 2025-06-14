@@ -27,19 +27,6 @@ export const leadsSlice = createSlice({
             state.leads.splice(index, 1)
         }
     },
-
-    extraReducers: {
-		[getLeadsContent.pending]: state => {
-			state.isLoading = true
-		},
-		[getLeadsContent.fulfilled]: (state, action) => {
-			state.leads = action.payload.data
-			state.isLoading = false
-		},
-		[getLeadsContent.rejected]: state => {
-			state.isLoading = false
-		},
-    }
 })
 
 export const { addNewLead, deleteLead } = leadsSlice.actions

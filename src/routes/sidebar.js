@@ -1,27 +1,39 @@
 /** Icons are imported separatly to reduce build time */
 
-import { LiaAddressCardSolid, LiaBriefcaseSolid, LiaBuromobelexperte, LiaBusinessTimeSolid, LiaCalendar, LiaCalendarCheck, LiaChalkboardSolid, LiaClipboardListSolid, LiaCommentsSolid, LiaDoorOpenSolid, LiaMedalSolid, LiaMoneyCheckAltSolid, LiaNewspaper, LiaPlaneDepartureSolid, LiaTicketAltSolid, LiaToolsSolid, LiaUserTieSolid } from "react-icons/lia";
+import {
+  LiaAddressCardSolid,
+  LiaBriefcaseSolid,
+  LiaBuromobelexperte,
+  LiaBusinessTimeSolid,
+  LiaCalendar,
+  LiaCalendarCheck,
+  LiaClipboardListSolid,
+  LiaDoorOpenSolid,
+  LiaMedalSolid,
+  LiaMoneyCheckAltSolid,
+  LiaNewspaper,
+  LiaToolsSolid, LiaUserPlusSolid,
+} from "react-icons/lia";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
 
 const routes = [
-
   {
     path: '/app/dashboard',
-    icon:<LiaBuromobelexperte className={iconClasses} />,  
+    icon: <LiaBuromobelexperte className={iconClasses}/>,
     name: 'Dashboard',
   },
   {
     path: '/app/calendar',
-    icon: <LiaCalendar className={iconClasses} />,
+    icon: <LiaCalendar className={iconClasses}/>,
     name: 'My Calendar',
   },
   {
     path: '', //no url needed as this has submenu
-    icon: <LiaAddressCardSolid className={`${iconClasses} inline` }/>, // icon component
+    icon: <LiaAddressCardSolid className={`${iconClasses} inline`}/>, // icon component
     name: 'HR', // name that appear in Sidebar
-    submenu : [
+    submenu: [
       {
         path: '/app/hr-leaves', //url
         icon: <LiaDoorOpenSolid className={submenuIconClasses}/>, // icon component
@@ -32,11 +44,12 @@ const routes = [
         icon: <LiaCalendarCheck className={submenuIconClasses}/>,
         name: 'Attendance',
       },
-      // {
-      //   path: '/app/hr-holiday', // url
-      //   icon: <LiaPlaneDepartureSolid className={submenuIconClasses}/>, // icon component
-      //   name: 'Holiday', // name that appear in Sidebar
-      // },
+      {
+        path: '/app/hr-registration',
+        icon: <LiaUserPlusSolid className={submenuIconClasses}/>,
+        name: 'Registration',
+        role: 'admin',
+      },
       {
         path: '/app/hr-appreciation', // url
         icon: <LiaMedalSolid className={submenuIconClasses}/>, // icon component
@@ -46,27 +59,27 @@ const routes = [
   },
   {
     path: '', // no direct path karena ada submenu
-    icon: <LiaBriefcaseSolid className={`${iconClasses} inline`} />,
+    icon: <LiaBriefcaseSolid className={`${iconClasses} inline`}/>,
     name: 'Work',
     submenu: [
       {
         path: '/app/work-projects',
-        icon: <LiaToolsSolid className={submenuIconClasses} />,
+        icon: <LiaToolsSolid className={submenuIconClasses}/>,
         name: 'Projects',
       },
       {
         path: '/app/work-tasks',
-        icon: <LiaClipboardListSolid className={submenuIconClasses} />,
+        icon: <LiaClipboardListSolid className={submenuIconClasses}/>,
         name: 'Tasks',
       },
       {
         path: '/app/work-timesheet',
-        icon: <LiaBusinessTimeSolid className={submenuIconClasses} />,
+        icon: <LiaBusinessTimeSolid className={submenuIconClasses}/>,
         name: 'Timesheet',
       },
     ]
-},  
-{
+  },
+  {
     path: '/app/finance',
     icon: <LiaMoneyCheckAltSolid className={iconClasses}/>,
     name: 'Finance',

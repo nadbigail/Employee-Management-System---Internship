@@ -22,6 +22,7 @@ const Appreciations = lazy(() => import('../pages/protected/Appreciation'))
 const Leaves = lazy(() => import('../pages/protected/Leaves'))
 const Attendance = lazy(() => import('../pages/protected/Attendance'))
 const Calendar = lazy(() => import('../pages/protected/Calendar'))
+const Registration = lazy(() => import('../pages/protected/Registration'))
 
 const routes = [
   {
@@ -90,6 +91,10 @@ const routes = [
     component: Attendance
   },
   {
+    path: '/hr-registration',
+    component: Registration,
+  },
+  {
     path: '/work-projects',
     component: Projects,
   },
@@ -113,6 +118,7 @@ const routes = [
     path: '/events',
     component: Events,
   },
+
 ]
 
 export default routes

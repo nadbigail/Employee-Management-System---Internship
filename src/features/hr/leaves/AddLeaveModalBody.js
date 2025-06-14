@@ -2,16 +2,33 @@ import React, { useState } from 'react';
 
 const LEAVE_TYPE_OPTIONS = ['Vacation', 'Sick Leave', 'Personal', 'Maternity/Paternity', 'Unpaid', 'Other'];
 
-function AddLeaveModalBody({ closeModal, extraObject }) {
-  const { setLeaves, editingLeave } = extraObject;
+const allEmployees = [
+  { id: 1, name: 'Alice Johnson' },
+  { id: 2, name: 'Bob Williams' },
+  { id: 3, name: 'Charlie Brown' },
+  { id: 4, name: 'Diana Miller' },
+  { id: 5, name: 'Ethan Davis' },
+  { id: 6, name: 'Nadine Abigail' },
+  { id: 7, name: 'Sara Nadya' },
+  { id: 8, name: 'Eunike Alfrita' },
+];
 
-  const [formState, setFormState] = useState(editingLeave || {
-    employeeName: '',
-    leaveType: LEAVE_TYPE_OPTIONS[0],
-    leaveStartDate: '',
-    leaveEndDate: '',
-    isPaid: true,
-    reason: ''
+function AddLeaveModalBody({ closeModal, extraObject }) {
+  const { setLeaves, editingLeave, role, name: loggedInUserName } = extraObject;
+
+  const getInitialEmployeeName = () => {
+    if (editingLeave) return editingLeave.employeeName;
+    if (role === 'admin') return allEmployees[0]?.name || '';
+    return loggedInUserName;
+  };
+
+  const [formState, setFormState] = useState({
+    employeeName: getInitialEmployeeName(),
+    leaveType: editingLeave?.leaveType || LEAVE_TYPE_OPTIONS[0],
+    leaveStartDate: editingLeave?.leaveStartDate || '',
+    leaveEndDate: editingLeave?.leaveEndDate || '',
+    isPaid: editingLeave?.isPaid !== undefined ? editingLeave.isPaid : true,
+    reason: editingLeave?.reason || ''
   });
 
   const handleInputChange = (e) => {
@@ -43,7 +60,25 @@ function AddLeaveModalBody({ closeModal, extraObject }) {
     <form onSubmit={handleSave} className="space-y-4">
       <div>
         <label htmlFor="employeeName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Employee Name</label>
-        <input type="text" name="employeeName" value={formState.employeeName} onChange={handleInputChange} required className="w-full p-2 border rounded-md shadow-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"/>
+        {role === 'admin' ? (
+          <select
+            name="employeeName"
+            value={formState.employeeName}
+            onChange={handleInputChange}
+            required
+            className="w-full p-2 border rounded-md shadow-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+          >
+            {allEmployees.map(emp => <option key={emp.id} value={emp.name}>{emp.name}</option>)}
+          </select>
+        ) : (
+          <input
+            type="text"
+            name="employeeName"
+            value={formState.employeeName}
+            readOnly
+            className="w-full p-2 border rounded-md shadow-sm border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 cursor-not-allowed"
+          />
+        )}
       </div>
       <div>
         <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Leave Type</label>

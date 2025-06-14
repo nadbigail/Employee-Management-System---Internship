@@ -38,19 +38,21 @@ function Login() {
         if (loginObj.password.trim() === "") return setErrorMessage("Password is required!")
 
         const validUsers = {
-            "admin@example.com": { password: "password", role: "admin", token: "adminToken" },
-            "employee@example.com": { password: "password", role: "employee", token: "employeeToken" }
+            "admin@example.com": { password: "password", role: "admin", name: "Admin", token: "adminToken" },
+            "nadine@example.com": { password: "password", role: "employee", name: "Nadine Abigail", token: "nadineToken" },
+            "sara@example.com": { password: "password", role: "employee", name: "Sara Nadya", token: "saraToken" },
+            "eunike@example.com": { password: "password", role: "employee", name: "Eunike Alfrita Maharani", token: "eunikeToken" }
         };
 
         const user = validUsers[loginObj.emailId];
 
         if (!user || user.password !== loginObj.password) {
-            return setErrorMessage("Invalid credentials! Try admin@example.com or employee@example.com with password 'password'");
+            return setErrorMessage("Invalid credentials! Please use a valid email and password.");
         }
 
         setLoading(true)
         setTimeout(() => {
-            dispatch(setUser({ token: user.token, role: user.role }));
+            dispatch(setUser({ token: user.token, role: user.role, name: user.name }));
             window.location.href = '/app/dashboard';
             setLoading(false);
         }, 1000);
@@ -76,9 +78,7 @@ function Login() {
               <div className="bg-[#455A64] p-12 flex flex-col justify-center min-h-[600px]">
                   <h2 className="text-white text-3xl font-bold mb-2">Welcome back!</h2>
                   <p className="text-gray-300 text-sm mb-4">
-                      Login with admin or employee credentials.
-                      <br/>
-                      <span className='font-bold'>admin@example.com</span> / <span className='font-bold'>employee@example.com</span> (password: <span className='font-bold'>password</span>)
+                      Login with credentials. (password: <span className='font-bold'>password</span>)
                   </p>
                   <div className="space-y-6">
                       <div>
