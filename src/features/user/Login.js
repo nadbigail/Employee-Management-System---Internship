@@ -67,6 +67,10 @@ function Login() {
         window.location.href = '/register'
     }
 
+    const handleForgotPassword = () => {
+        window.location.href = '/forgot-password'
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
           <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden bg-white shadow-2xl">
@@ -112,6 +116,14 @@ function Login() {
                         className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'}`}>
                           {loading ? "Signing in..." : "Login"}
                       </button>
+                      <div className="text-right">
+                          <button 
+                            onClick={handleForgotPassword} 
+                            className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors bg-transparent border-none cursor-pointer"
+                          >
+                              Forgot Password?
+                          </button>
+                      </div>
                       <div className="text-center text-sm text-gray-300 pt-4">
                           Don't have an account? {' '}
                           <button onClick={handleRegister} className="text-orange-400 hover:text-orange-300 font-medium transition-colors bg-transparent border-none cursor-pointer">
