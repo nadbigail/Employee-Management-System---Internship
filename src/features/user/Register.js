@@ -1,20 +1,7 @@
 import { useState } from 'react'
-
-const InputText = ({ type, defaultValue, updateType, updateFormValue, inputClassName, placeholder }) => {
-    return (
-      <input
-        type={type}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        className={inputClassName}
-        onChange={(e) => updateFormValue({ updateType, value: e.target.value })}
-      />
-    )
-}
-
-const ErrorText = ({ styleClass, children }) => {
-    return <div className={styleClass}>{children}</div>
-}
+import InputText from '../../components/Input/InputText'
+import SelectInput from '../../components/Input/SelectInput' // Impor komponen baru
+import ErrorText from '../../components/Typography/ErrorText'
 
 function Register() {
     const INITIAL_REGISTER_OBJ = {
@@ -29,6 +16,13 @@ function Register() {
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [registerObj, setRegisterObj] = useState(INITIAL_REGISTER_OBJ)
+
+    const departmentOptions = [
+        { name: 'Operations', value: 'Operations' },
+        { name: 'Marketing & Sales', value: 'Marketing & Sales' },
+        { name: 'Finance Accounting & Tax', value: 'Finance Accounting & Tax' },
+        { name: 'Human Resources & General Affair', value: 'Human Resources & General Affair' }
+    ];
 
     const submitForm = (e) => {
         e.preventDefault()
@@ -92,7 +86,16 @@ function Register() {
                           </div>
                           <InputText type="email" defaultValue={registerObj.emailId} updateType="emailId" updateFormValue={updateFormValue} placeholder="Email Address" inputClassName="w-full px-4 py-3 bg-gray-200 rounded-xl focus:ring-orange-400" />
                           <InputText type="password" defaultValue={registerObj.password} updateType="password" updateFormValue={updateFormValue} placeholder="Password" inputClassName="w-full px-4 py-3 bg-gray-200 rounded-xl focus:ring-orange-400" />
-                          <InputText type="text" defaultValue={registerObj.department} updateType="department" updateFormValue={updateFormValue} placeholder="Department (e.g., Marketing)" inputClassName="w-full px-4 py-3 bg-gray-200 rounded-xl focus:ring-orange-400" />
+
+                          <SelectInput
+                            name="department"
+                            options={departmentOptions}
+                            defaultValue={registerObj.department}
+                            updateType="department"
+                            updateFormValue={updateFormValue}
+                            placeholder="Select Department"
+                          />
+
                           <InputText type="text" defaultValue={registerObj.contact} updateType="contact" updateFormValue={updateFormValue} placeholder="Contact Number (Optional)" inputClassName="w-full px-4 py-3 bg-gray-200 rounded-xl focus:ring-orange-400" />
 
                           {errorMessage && (<ErrorText styleClass="text-red-300 text-sm bg-red-900 bg-opacity-20 p-3 rounded-lg">{errorMessage}</ErrorText>)}

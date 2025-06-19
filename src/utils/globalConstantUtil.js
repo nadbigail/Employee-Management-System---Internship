@@ -9,6 +9,7 @@ module.exports = Object.freeze({
         LEAVE_ADD_NEW: "LEAVE_ADD_NEW",
         MANAGE_REGISTRATION: "MANAGE_REGISTRATION",
         LEAVE_REQUEST_CONFIRMATION: "LEAVE_REQUEST_CONFIRMATION",
+        EXPENSE_ADD_NEW: "EXPENSE_ADD_NEW",
         DEFAULT : "",
     },
 
