@@ -42,6 +42,7 @@ function Register() {
         lastName: "",
         emailId: "",
         password: "",
+        confirmPassword: "",
         department: "",
         contact: ""
     }
@@ -64,6 +65,8 @@ function Register() {
         if (registerObj.firstName.trim() === "") return setErrorMessage("First name is required!")
         if (registerObj.emailId.trim() === "") return setErrorMessage("Email is required!")
         if (registerObj.password.trim() === "") return setErrorMessage("Password is required!")
+        if (registerObj.confirmPassword.trim() === "") return setErrorMessage("Confirm password is required!")
+        if (registerObj.password !== registerObj.confirmPassword) return setErrorMessage("Passwords do not match!")
         if (registerObj.department.trim() === "") return setErrorMessage("Department is required!")
 
         setLoading(true)
@@ -159,6 +162,18 @@ function Register() {
                                   updateType="password" 
                                   updateFormValue={updateFormValue} 
                                   placeholder="Enter your password" 
+                                  inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all" 
+                              />
+                          </div>
+
+                          <div>
+                              <label className="text-sm font-medium text-white block mb-2">Confirm Password</label>
+                              <InputText 
+                                  type="password" 
+                                  defaultValue={registerObj.confirmPassword} 
+                                  updateType="confirmPassword" 
+                                  updateFormValue={updateFormValue} 
+                                  placeholder="Confirm your password" 
                                   inputClassName="w-full px-4 py-3 bg-gray-200 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-orange-400 focus:outline-none transition-all" 
                               />
                           </div>
