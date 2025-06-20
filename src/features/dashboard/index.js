@@ -250,28 +250,24 @@ function Dashboard() {
                 <tr>
                   <th scope="col" className="py-3 px-4">#</th>
                   <th scope="col" className="py-3 px-4">Name</th>
-                  <th scope="col" className="py-3 px-4">Appreciation</th>
-                  <th scope="col" className="py-3 px-4">Date</th>
+                  <th scope="col" className="py-3 px-4">Department</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr className="border-b dark:border-gray-700">
                   <td className="py-3 px-4">1</td>
                   <td className="py-3 px-4">Kevin Hartanto</td>
-                  <td className="py-3 px-4">Praised by client for fast response on the ABC project</td>
-                  <td className="py-3 px-4">May 12th, 2025</td>
+                  <td className="py-3 px-4">Finance</td>
                 </tr>
                 <tr className="border-b dark:border-gray-700">
                   <td className="py-3 px-4">2</td>
                   <td className="py-3 px-4">Felicia Anggraini</td>
-                  <td className="py-3 px-4">Completed system migration 3 days ahead of schedule</td>
-                  <td className="py-3 px-4">May 10th, 2025</td>
+                  <td className="py-3 px-4">HR</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4">3</td>
                   <td className="py-3 px-4">Rafi Dirgantara</td>
-                  <td className="py-3 px-4">Organized a successful internal workshop on AI tools</td>
-                  <td className="py-3 px-4">May 8th, 2025</td>
+                  <td className="py-3 px-4">Operations</td>
                 </tr>
                 </tbody>
               </table>
@@ -281,7 +277,7 @@ function Dashboard() {
           {/* Tickets */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4">
             <div className="border-b dark:border-gray-700 pb-2 mb-4">
-              <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Tickets</h2>
+              <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Projects</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-gray-600 dark:text-gray-300">
@@ -289,7 +285,7 @@ function Dashboard() {
                   className="text-left text-gray-500 dark:text-gray-400 border-b dark:border-gray-700 text-xs uppercase">
                 <tr>
                   <th className="py-2 px-2">#</th>
-                  <th className="py-2 px-2">Task</th>
+                  <th className="py-2 px-2">Projects</th>
                   <th className="py-2 px-2">Status</th>
                   <th className="py-2 px-2">Due Date</th>
                 </tr>
@@ -380,7 +376,7 @@ function Dashboard() {
         {/** ---------------------- Notice ------------------------- */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mt-6">
           <div className="border-b dark:border-gray-700 pb-2 mb-4">
-            <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Notice</h2>
+            <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Events</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
